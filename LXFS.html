@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>联系我们 - 小可乐工具箱</title>
+    <link rel="shortcut icon" href="../cola-ff/assets/vico/main.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 新增联系页面专用样式 */
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4cc9f0;
+            --warning-color: #f72585;
+        }
+        
+        .contact-container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            text-align: left;
+        }
+        
+        .contact-header {
+            margin-bottom: 2.5rem;
+            text-align: center;
+        }
+        
+        .contact-header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 1rem;
+        }
+        
+        .contact-header p {
+            font-size: 1.1rem;
+            color: var(--dark-color);
+            line-height: 1.6;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .contact-section {
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            margin-bottom: 2rem;
+            position: relative;
+            overflow: hidden;
+            border: 1px solid rgba(0, 0, 0, 0.05);
+        }
+        
+        .contact-section::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 5px;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+        }
+        
+        .contact-section h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            margin-bottom: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+        }
+        
+        .contact-section h3 i {
+            color: var(--primary-color);
+        }
+        
+        .contact-info {
+            margin-bottom: 1.5rem;
+        }
+        
+        .contact-info p {
+            margin-bottom: 0.8rem;
+            display: flex;
+            align-items: center;
+            gap: 0.8rem;
+            color: var(--dark-color);
+            font-size: 1rem;
+        }
+        
+        .contact-info p i {
+            color: var(--accent-color);
+            width: 24px;
+            text-align: center;
+        }
+        
+        .social-media {
+            display: flex;
+            gap: 1rem;
+            margin-top: 2rem;
+            justify-content: center;
+            position: relative;
+        }
+        
+        .social-btn {
+            width: 50px;
+            height: 50px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 1.5rem;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            cursor: pointer;
+        }
+        
+        .social-btn::before {
+            content: '';
+            position: absolute;
+            width: 120%;
+            height: 120%;
+            background: linear-gradient(
+                45deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            transform: translateX(-100%) rotate(45deg);
+            transition: all 0.6s ease;
+        }
+        
+        .social-btn:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.2);
+        }
+        
+        .social-btn:hover::before {
+            transform: translateX(100%) rotate(45deg);
+        }
+        
+        .social-btn.wechat {
+            background: linear-gradient(135deg, #07C160, #09AF55);
+        }
+        
+        .social-btn.qq {
+            background: linear-gradient(135deg, #12B7F5, #0084FF);
+        }
+        
+        /* 二维码图片样式 */
+        .qr-code {
+            position: absolute;
+            bottom: 70px;
+            left: 50%;
+            transform: translateX(-50%) scale(0);
+            width: 180px;
+            height: 180px;
+            background: white;
+            border-radius: 12px;
+            padding: 15px;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+            transition: all 0.3s ease;
+            opacity: 0;
+            z-index: 100;
+            border: 1px solid rgba(0, 0, 0, 0.1);
+        }
+        
+        .qr-code img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+            border-radius: 8px;
+        }
+        
+        .qr-code::after {
+            content: '';
+            position: absolute;
+            bottom: -10px;
+            left: 50%;
+            transform: translateX(-50%) rotate(45deg);
+            width: 20px;
+            height: 20px;
+            background: white;
+            box-shadow: 5px 5px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .social-btn.active .qr-code,
+        .social-btn:hover .qr-code {
+            transform: translateX(-50%) scale(1);
+            opacity: 1;
+        }
+        
+        .progress-section {
+            margin-top: 3rem;
+            background: white;
+            border-radius: 12px;
+            padding: 2rem;
+            box-shadow: 0 10px 30px rgba(0, 0, 0, 0.1);
+            text-align: center;
+        }
+        
+        .progress-header {
+            margin-bottom: 1.5rem;
+            text-align: center;
+        }
+        
+        .progress-header h3 {
+            font-size: 1.5rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.8rem;
+        }
+        
+        .progress-header h3 i {
+            color: var(--primary-color);
+        }
+        
+        .progress-container {
+            width: 100%;
+            background: #f1f3f5;
+            border-radius: 50px;
+            height: 12px;
+            overflow: hidden;
+            margin-bottom: 1rem;
+            max-width: 500px;
+            margin-left: auto;
+            margin-right: auto;
+        }
+        
+        .progress-bar {
+            height: 100%;
+            background: linear-gradient(90deg, var(--primary-color), var(--accent-color));
+            border-radius: 50px;
+            width: 28%;
+            position: relative;
+            transition: width 1s ease;
+        }
+        
+        .progress-bar::after {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: linear-gradient(
+                90deg,
+                transparent,
+                rgba(255, 255, 255, 0.3),
+                transparent
+            );
+            animation: progressShine 2s infinite;
+        }
+        
+        @keyframes progressShine {
+            0% {
+                transform: translateX(-100%);
+            }
+            100% {
+                transform: translateX(100%);
+            }
+        }
+        
+        .progress-text {
+            font-size: 1rem;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        .progress-text i {
+            color: var(--accent-color);
+        }
+        
+        /* 响应式设计 */
+        @media (max-width: 768px) {
+            .contact-container {
+                padding: 1rem;
+            }
+            
+            .contact-header h1 {
+                font-size: 2rem;
+            }
+            
+            .contact-section {
+                padding: 1.5rem;
+            }
+            
+            .contact-section h3 {
+                font-size: 1.3rem;
+            }
+            
+            .contact-info p {
+                font-size: 0.9rem;
+            }
+            
+            .social-btn {
+                width: 45px;
+                height: 45px;
+                font-size: 1.3rem;
+            }
+            
+            .qr-code {
+                width: 150px;
+                height: 150px;
+                bottom: 60px;
+            }
+        }
+        
+        @media (max-width: 480px) {
+            .qr-code {
+                width: 130px;
+                height: 130px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="assets/vico/main.ico" alt="小可乐工具箱" class="logo">
+                <span class="brand-name">小可乐工具箱</span>
+                <span class="tagline">工具 · 效率 · 开源</span>
+            </div>
+            <div class="navbar-menu">
+                <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li class="nav-item"><a href="tools.html"><i class="fas fa-tools"></i> 工具</a></li>
+                    <li class="nav-item"><a href="forum.html"><i class="fas fa-comments"></i> 论坛</a></li>
+                    <li class="nav-item active"><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                </ul>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <main class="main-content">
+        <div class="contact-container">
+            <div class="contact-header">
+                <h1><i class="fas fa-headset"></i> 联系我们</h1>
+                <p>在使用小可乐工具箱过程中遇到任何问题或有任何建议，欢迎通过以下方式联系我的技术团队。我致力于为您提供最好的工具体验，您的反馈对我们非常重要。</p>
+            </div>
+            
+          
+            <div class="contact-section">
+                <h3><i class="fas fa-user-tie"></i> 技术负责人</h3>
+                <div class="contact-info">
+                    <p><i class="fas fa-signature"></i> <strong>姓名：</strong>Ran</p>
+                    <p><i class="fas fa-id-card"></i> <strong>职位：</strong>数据管理/分析</p>
+                    <p><i class="fas fa-envelope"></i> <strong>邮箱：</strong>3430667576@qq.com</p>
+                </div>
+                <div class="social-media">
+                </div>
+            </div>
+            
+          
+            <div class="contact-section">
+                <h3><i class="fas fa-user-shield"></i> 站长联系</h3>
+                <div class="contact-info">
+                    <p><i class="fas fa-signature"></i> <strong>姓名：</strong>冉站长</p>
+                    <p><i class="fas fa-envelope"></i> <strong>邮箱：</strong>2171156701@qq.com</p>
+                    <p><i class="fas fa-map-marker-alt"></i> <strong>地址：</strong>中国·新疆</p>
+                    <p><i class="fas fa-globe"></i> <strong>网站：</strong>www.kele-tools.com</p>
+                </div>
+                <div class="social-media">
+                </div>
+            </div>
+            
+           
+            <div class="progress-section">
+                <div class="progress-header">
+                    <h3><i class="fas fa-tasks"></i> 网站开发进度</h3>
+                </div>
+                <div class="progress-container">
+                    <div class="progress-bar"></div>
+                </div>
+                <p class="progress-text"><i class="fas fa-info-circle"></i> 当前网站完善进度: 28% - 我们正在努力开发更多实用工具</p>
+            </div>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a target="_blank" href="about.html" class="footer-link">关于我们</a>
+                    <a target="_blank" href="license.html" class="footer-link">开源协议</a>
+                    <a target="_blank" href="contribute.html" class="footer-link">贡献指南</a>
+                    <a target="_blank" href="cla.html" class="footer-link">贡献者协议</a>
+                </div>
+                <div class="footer-social">
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-github"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-weixin"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-qq"></i></a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>© 2025 小可乐工具箱 - 开源免费工具集合 | 由可乐科技提供支持</p>
+                <div class="friend-links-container">
+        <button class="friend-links-btn">友情链接 ▼</button>
+        <div class="friend-links-dropdown" id="friendLinksDropdown">
+            <a href="https://www.codeus.cn/" target="_blank">ZiYuanHub</a>
+        </div>
+    </div>
+            </div>
+        </div>
+    </footer>
+    <script src="assets/js/main.js"></script>
+    <script>
+
+        document.addEventListener('DOMContentLoaded', function() {
+            // 卡片动画
+            const sections = document.querySelectorAll('.contact-section, .progress-section');
+            sections.forEach((section, index) => {
+                section.style.opacity = '0';
+                section.style.transform = 'translateY(20px)';
+                section.style.transition = `all 0.5s ease ${index * 0.1}s`;
+                
+                setTimeout(() => {
+                    section.style.opacity = '1';
+                    section.style.transform = 'translateY(0)';
+                }, 100);
+            });
+            
+            // 进度条动画
+            const progressBar = document.querySelector('.progress-bar');
+            setTimeout(() => {
+                progressBar.style.width = '28%';
+            }, 500);
+            
+            // 社交按钮悬停效果
+            const socialBtns = document.querySelectorAll('.social-btn');
+            socialBtns.forEach(btn => {
+                btn.addEventListener('mouseenter', function() {
+                    this.style.transform = 'translateY(-5px) scale(1.05)';
+                });
+                
+                btn.addEventListener('mouseleave', function() {
+                    this.style.transform = 'translateY(0) scale(1)';
+                });
+                
+                // 点击切换二维码显示
+                btn.addEventListener('click', function(e) {
+                    e.stopPropagation();
+                    socialBtns.forEach(b => b.classList.remove('active'));
+                    this.classList.toggle('active');
+                });
+            });
+            
+            // 点击页面其他地方关闭二维码
+            document.addEventListener('click', function() {
+                socialBtns.forEach(btn => btn.classList.remove('active'));
+            });
+        });
+    </script>
+</body>
+</html>

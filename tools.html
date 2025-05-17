@@ -1,0 +1,273 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具集合 - 小可乐工具箱</title>
+    <link rel="shortcut icon" href="../cola-ff/assets/vico/main.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="particles-js" ></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                 <img src="assets/vico/main.ico" alt="小可乐工具箱" class="logo">
+                <span class="brand-name">小可乐工具箱</span>
+                <span class="tagline">工具 · 效率 · 开源</span>
+            </div>
+            <div class="navbar-menu">
+                <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li class="nav-item"><a href="tools.html"><i class="fas fa-tools"></i> 工具</a></li>
+                    <li class="nav-item"><a href="forum.html"><i class="fas fa-comments"></i> 论坛</a></li>
+                    <li class="nav-item active"><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                </ul>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    <main class="main-content">
+
+        <!-- 工具搜索 -->
+        <section class="tool-search">
+            <div class="container">
+                <div class="search-container">
+                    <input type="text" id="tool-search" placeholder="搜索工具名称或关键词..." class="search-input">
+                </div>
+            </div>
+        </section>
+
+        <!-- 工具分类 -->
+        <section class="tool-categories">
+            <div class="container">
+                <div class="category-tabs">
+                    <button class="category-tab active" data-category="all">全部工具</button>
+                    <button class="category-tab" data-category="pc">电脑工具</button>
+                    <button class="category-tab" data-category="mobile">手机工具</button>
+                    <button class="category-tab" data-category="web">网页工具</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 热门工具 -->
+        <section class="hot-tools">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-fire"></i> 热门工具</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://downloadfiles.pdfgear.com/releases/windows/pdfgear_setup_v2.1.12.exe">
+                            <div class="tool-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3 class="tool-title">PDF工具（完全免费）</h3>
+                        <p class="tool-desc">PDFgear是多功能程序，里面包含了PDF编辑，合成，各种文件格式转化等功能，而且全部免费</p>
+                        <div class="tool-tag">Windows10/11</div>
+                        <div class="tool-badge hot">热</div>
+                    </div></a>
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://cdkm.com/cn/?ref=www.faxianai.com">
+                            <div class="tool-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3 class="tool-title">格式转化</h3>
+                        <p class="tool-desc">支持格式非常多；比如：文档，电子书视频，图片，音频等格式；支持批量转换文件，离线转换文件；完全免费“无需登录”</p>
+                        <div class="tool-tag">网页端</div>
+                        <div class="tool-badge hot">热</div>
+                    </div></a>
+                    <div class="tool-card"  data-categories="web">
+                        <a target="_blank" href="https://remove.photos/zh-cn/">
+                            <div class="tool-icon">
+                            <i class="fas fa-image"></i> 
+                        </div>
+                        <h3 class="tool-title">图片编辑</h3>
+                        <p class="tool-desc">支持智能抠图，无损放大，黑白照上色，在线消除，天空替换，模糊背景等</p>
+                        <div class="tool-tag">网页端</div>
+                        <div class="tool-badge hot">热</div>
+                    </div></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 全部工具 -->
+        <section class="all-tools">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-th-large"></i> 全部工具</h2>
+                <div class="tools-grid">
+                    <a href="          "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fab fa-qq" title="QQ图标"></i>
+                        </div>
+                        <h3 class="tool-title">QQ</h3>
+                        <p class="tool-desc">现代互联网社会必备的通讯软件，腾讯产品，值得您一用！</p>
+                        <div class="tool-tag">多版整合||官方产品</div>
+                    </div></a>
+                    <a href="                    "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fab fa-weixin"></i>
+                        </div>
+                        <h3 class="tool-title">微信</h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="               "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                   "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                   "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                 "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="            "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                   "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                  "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                  "><div class="tool-card" data-categories="pc,mobile">
+                        <div class="tool-icon">
+                            <i class="fas fa-file-word"></i>
+                        </div>
+                        <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                    <a href="                 ">
+                        <div class="tool-card" data-categories="pc,mobile">
+                            <div class="tool-icon">
+                                <i class="fas fa-file-word"></i>
+                            </div>
+                            <h3 class="tool-title"></h3>
+                        <p class="tool-desc"></p>
+                        <div class="tool-tag"></div>
+                    </div></a>
+                </div>
+            </div>
+        </section>
+
+                    <!-- 下载使用 -->
+<section class="video-tutorial">
+    <div class="container">
+        <div class="tutorial-card">
+            <div class="tutorial-header">
+                <h2><i class="fas fa-film"></i> 工具使用/下载教程<!--（<a href="" style="color: #4a6bff;" target="_blank">使用教程</a>）--></h2>
+                <div class="tutorial-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>选择工具</h3>
+                            <p>从分类或搜索中找到您需要的工具</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>查看适配性</h3>
+                            <p>按照机型，选择适合自己的版本使用</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>使用/下载</h3>
+                            <p>在线使用或下载到本地</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            </div>
+        </div>
+    </div>
+</section>
+    </main>
+
+   <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a target="_blank" href="about.html" class="footer-link">关于我们</a>
+                    <a target="_blank" href="license.html" class="footer-link">开源协议</a>
+                    <a target="_blank" href="contribute.html" class="footer-link">贡献指南</a>
+                    <a target="_blank" href="cla.html" class="footer-link">贡献者协议</a>
+                </div>
+                <div class="footer-social">
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-github"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-weixin"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-qq"></i></a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>© 2025 小可乐工具箱 - 开源免费工具集合 | 由可乐科技提供支持</p>
+                <div class="friend-links-container">
+        <button class="friend-links-btn">友情链接 ▼</button>
+        <div class="friend-links-dropdown" id="friendLinksDropdown">
+            <a href="https://www.codeus.cn/" target="_blank">ZiYuanHub</a>
+        </div>
+    </div>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/particles.js"></script>
+    <script src="assets/js/tools.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>

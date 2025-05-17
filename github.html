@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站部署中 - 小可乐工具箱</title>
+    <link rel="shortcut icon" href="../cola-ff/assets/vico/main.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/themes.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 404页面特有样式 */
+        .deployment-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            min-height: 80vh;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .deployment-icon {
+            font-size: 5rem;
+            color: var(--primary-color);
+            margin-bottom: 30px;
+            animation: pulse 2s infinite;
+        }
+        
+        .deployment-title {
+            font-size: 2.5rem;
+            margin-bottom: 20px;
+            color: var(--text-color);
+        }
+        
+        .deployment-message {
+            font-size: 1.2rem;
+            color: var(--light-text);
+            max-width: 600px;
+            margin-bottom: 40px;
+            line-height: 1.6;
+        }
+        
+        .progress-container {
+            width: 100%;
+            max-width: 400px;
+            margin: 30px auto;
+        }
+        
+        .progress-bar {
+            height: 8px;
+            background-color: rgba(0, 0, 0, 0.1);
+            border-radius: 10px;
+            overflow: hidden;
+        }
+        
+        .progress {
+            height: 100%;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            border-radius: 10px;
+            width: 65%;
+            animation: progressAnimation 3s ease-in-out infinite;
+        }
+        
+        .progress-text {
+            margin-top: 10px;
+            font-size: 0.9rem;
+            color: var(--light-text);
+        }
+        
+        .home-link {
+            display: inline-flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 24px;
+            background: linear-gradient(to right, var(--primary-color), var(--secondary-color));
+            color: white;
+            text-decoration: none;
+            border-radius: 50px;
+            font-weight: 500;
+            margin-top: 30px;
+            transition: var(--transition);
+        }
+        
+        .home-link:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 5px 15px rgba(74, 107, 255, 0.3);
+        }
+        
+        @keyframes pulse {
+            0% { transform: scale(1); }
+            50% { transform: scale(1.1); }
+            100% { transform: scale(1); }
+        }
+        
+        @keyframes progressAnimation {
+            0% { width: 65%; }
+            50% { width: 70%; }
+            100% { width: 65%; }
+        }
+    </style>
+</head>
+<body>
+    <!-- 3D背景粒子效果 -->
+    <div id="particles-js"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                 <img src="assets/vico/main.ico" alt="小可乐工具箱" class="logo">
+                <span class="brand-name">小可乐工具箱</span>
+                <span class="tagline">工具 · 效率 · 开源</span>
+            </div>
+            <div class="navbar-menu">
+                <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                </ul>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+
+    <!-- 404页面内容 -->
+    <main class="main-content">
+        <div class="deployment-container">
+            <div class="deployment-icon">
+                <i class="fas fa-rocket"></i>
+            </div>
+            <h1 class="deployment-title">404 - 页面未找到</h1>
+            <p class="deployment-message">
+                该网站正在部署中，部分功能可能暂时无法访问。<br>
+                我们的开发团队正在努力完成部署工作，请稍后再试。
+            </p>
+            
+            <div class="progress-container">
+                <div class="progress-bar">
+                    <div class="progress"></div>
+                </div>
+                <div class="progress-text">部署进度:不稳定</div>
+            </div>
+            
+            <a href="index.html" class="home-link">
+                <i class="fas fa-arrow-left"></i> 返回首页
+            </a>
+        </div>
+    </main>
+
+    <!-- 页脚 -->
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a target="_blank" href="about.html" class="footer-link">关于我们</a>
+                    <a target="_blank" href="license.html" class="footer-link">开源协议</a>
+                    <a target="_blank" href="contribute.html" class="footer-link">贡献指南</a>
+                    <a target="_blank" href="cla.html" class="footer-link">贡献者协议</a>
+                </div>
+                <div class="footer-social">
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-github"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-weixin"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-qq"></i></a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>© 2025 小可乐工具箱 - 开源免费工具集合 | 由可乐科技提供支持</p>
+                <div class="friend-links-container">
+        <button class="friend-links-btn">友情链接 ▼</button>
+        <div class="friend-links-dropdown" id="friendLinksDropdown">
+            <a href="https://www.codeus.cn/" target="_blank">ZiYuanHub</a>
+        </div>
+    </div>
+            </div>
+        </div>
+    </footer>
+    <script src="assets/js/main.js"></script>
+    <script src="assets/js/particles.js"></script>
+    <script src="assets/js/theme.js"></script>
+    <script>
+        // 禁用所有外部链接
+        document.querySelectorAll('a[href="about.html"]').forEach(link => {
+            link.addEventListener('click', function(e) {
+                e.preventDefault();
+                alert('网站正在部署中，该功能暂时不可用');
+            });
+        });
+    </script>
+
+<script>
+    // 禁用所有外部链接
+    document.querySelectorAll('a[href="cla.html"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('网站正在部署中，该功能暂时不可用');
+        });
+    });
+</script>
+
+<script>
+    // 禁用所有外部链接
+    document.querySelectorAll('a[href="contribute.html"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('网站正在部署中，该功能暂时不可用');
+        });
+    });
+</script>
+
+<script>
+    // 禁用所有外部链接
+    document.querySelectorAll('a[href="license.html"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('网站正在部署中，该功能暂时不可用');
+        });
+    });
+</script>
+
+<script>
+    // 禁用所有外部链接
+    document.querySelectorAll('a[href="LXFS.html"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('网站正在部署中，该功能暂时不可用');
+        });
+    });
+</script>
+
+<script>
+    // 禁用所有外部链接
+    document.querySelectorAll('a[href="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('网站正在部署中，该功能暂时不可用');
+        });
+    });
+</script>
+
+<script>
+    // 禁用所有外部链接
+    document.querySelectorAll('a[href="#"]').forEach(link => {
+        link.addEventListener('click', function(e) {
+            e.preventDefault();
+            alert('网站正在部署中，该功能暂时不可用');
+        });
+    });
+</script>
+</body>
+</html>
