@@ -40,17 +40,35 @@
         <section class="tool-search">
             <div class="container">
                 <div class="search-container">
-<input type="text" id="tool-search" class="search-input multiline-placeholder">
+
+
+<div class="custom-placeholder">
+  <input type="text" id="tool-search" class="search-input">
+  <div class="placeholder-text">搜索工具名称或关键词...<br>قورال نامى ياكى ئاچقۇچلۇق سۆزنى ئزدەڭ</div>
+</div>
+
 <style>
-  .multiline-placeholder::placeholder {
-    line-height: 0.5;  /* 调整行高 */
-    white-space: pre-line;  /* 允许换行 */
+  .custom-placeholder {
+    position: relative;
+    display: inline-block;
+  }
+  .placeholder-text {
+    position: absolute;
+    top: 0;
+    left: 0;
+    color: #999;
+    pointer-events: none;
+    padding: 0.5em;
+  }
+  .search-input:focus + .placeholder-text,
+  .search-input:not(:placeholder-shown) + .placeholder-text {
+    display: none;
   }
 </style>
-<script>
-  document.querySelector('.multiline-placeholder').setAttribute('placeholder', 
-    '搜索工具名称或关键词...\nقورال نامى ياكى ئاچقۇچلۇق سۆزنى ئزدەڭ');
-</script>
+
+
+
+                    
                 </div>
             </div>
         </section>
