@@ -2981,3 +2981,13 @@ video::-webkit-media-controls-panel {
         font-size: 15px;
     }
 }
+
+/* 如果需要支持RTL（从右到左）语言 */
+[dir="rtl"] {
+    direction: rtl;
+    text-align: right;
+}
+
+[dir="rtl"] .navbar-container {
+    flex-direction: row-reverse;
+}
