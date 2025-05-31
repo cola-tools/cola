@@ -1,0 +1,252 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>站点合集 - 小可乐工具箱</title>
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        /* 新增卡片样式 */
+        .tools-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+            gap: 20px;
+            margin-top: 20px;
+        }
+        
+        .tool-card {
+            background: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+        }
+        
+        .tool-card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+        }
+        
+        .tool-image {
+            height: 140px;
+            overflow: hidden;
+        }
+        
+        .tool-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: transform 0.3s ease;
+        }
+        
+        .tool-card:hover .tool-image img {
+            transform: scale(1.05);
+        }
+        
+        .tool-content {
+            padding: 15px;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .tool-title {
+            font-size: 1.1rem;
+            margin-bottom: 8px;
+            color: #333;
+        }
+        
+        .tool-desc {
+            font-size: 0.9rem;
+            color: #666;
+            margin-bottom: 10px;
+            flex: 1;
+        }
+        
+        .tool-tag {
+            display: inline-block;
+            background: #f0f0f0;
+            color: #555;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            margin-top: auto;
+        }
+        
+        .tool-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background: #ff4757;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 0.8rem;
+            font-weight: bold;
+        }
+        
+        .tool-card a {
+            display: block;
+            height: 100%;
+            text-decoration: none;
+            color: inherit;
+        }
+    </style>
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="assets/images/logo_001.jpg" alt="小可乐工具箱" class="logo">
+                <span class="brand-name">小可乐工具箱</span>
+                <span class="tagline">工具 · 效率 · 开源</span>
+            </div>
+            <div class="navbar-menu">
+                <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li class="nav-item"><a href="tools.html"><i class="fas fa-tools"></i> 工具</a></li>
+                    <li class="nav-item"><a href="forum.html"><i class="fas fa-comments"></i> 论坛</a></li>
+                    <li class="nav-item active"><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                </ul>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    
+    <main class="main-content">
+        <!-- 工具搜索 -->
+        <section class="tool-search">
+            <div class="container">
+                <div class="search-container">
+                    <input type="text" id="tool-search" placeholder="搜索站点名称或关键词..." class="search-input">
+                </div>
+            </div>
+        </section>
+
+        <!-- 热门站点 -->
+        <section class="hot-tools">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-fire"></i> 热门站点</h2>
+                <div class="tools-grid">
+                    <!-- PDF工具 -->
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://downloadfiles.pdfgear.com/releases/windows/pdfgear_setup_v2.1.12.exe">
+                            <div class="tool-image">
+                                <img src="assets/images/web/JSBK.png" alt="PDF工具">
+                            </div>
+                            <div class="tool-content">
+                                <h3 class="tool-title">技术博客站点</h3>
+                                <p class="tool-desc">可以发布专属于你的博客文章，让更多的人看到你的文章，你可以将它公布到局域网内，让亲戚或朋友看看你的成果，你也可以拿去吹牛逼！</p>
+                                <div class="tool-badge">热</div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- 格式转换 -->
+                    <div class="tool-card" data-categories="web">
+                        <a target="_blank" href="https://cdkm.com/cn/?ref=www.faxianai.com">
+                            <div class="tool-image">
+                                <img src="assets/images/converter.jpg" alt="格式转换">
+                            </div>
+                            <div class="tool-content">
+                                <h3 class="tool-title">格式转化</h3>
+                                <p class="tool-desc">支持格式非常多；比如：文档，电子书视频，图片，音频等格式；支持批量转换文件，离线转换文件；完全免费"无需登录"</p>
+                                <div class="tool-tag">网页端</div>
+                                <div class="tool-badge">热</div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- 图片编辑 -->
+                    <div class="tool-card" data-categories="web">
+                        <a target="_blank" href="https://remove.photos/zh-cn/">
+                            <div class="tool-image">
+                                <img src="assets/images/image-editor.jpg" alt="图片编辑">
+                            </div>
+                            <div class="tool-content">
+                                <h3 class="tool-title">图片编辑</h3>
+                                <p class="tool-desc">支持智能抠图，无损放大，黑白照上色，在线消除，天空替换，模糊背景等</p>
+                                <div class="tool-tag">网页端</div>
+                                <div class="tool-badge">热</div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- 全部站点 -->
+        <section class="all-tools">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-th-large"></i> 全部工具</h2>
+                <div class="tools-grid">
+                    <!-- QQ -->
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://colatools.cn/">
+                            <div class="tool-image">
+                                <img src="assets/images/qq.jpg" alt="QQ">
+                            </div>
+                            <div class="tool-content">
+                                <h3 class="tool-title">QQ</h3>
+                                <p class="tool-desc">现代互联网社会必备的通讯软件，腾讯产品，值得您一用！</p>
+                                <div class="tool-tag">多版整合||官方产品</div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                    <!-- 录屏软件 -->
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://colatools.cn/">
+                            <div class="tool-image">
+                                <img src="assets/images/screen-recorder.jpg" alt="录屏软件">
+                            </div>
+                            <div class="tool-content">
+                                <h3 class="tool-title">录屏软件整合</h3>
+                                <p class="tool-desc">多款Mac端录频程序，因条件有限原因无法亲测，有条件的用户，可以将使用情况通过邮箱反馈给站长</p>
+                                <div class="tool-tag">Mac端</div>
+                            </div>
+                        </a>
+                    </div>
+                    
+                </div>
+            </div>
+        </section>
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a href="about.html" class="footer-link">关于我们</a>
+                    <a href="license.html" class="footer-link">开源协议</a>
+                    <a href="contribute.html" class="footer-link">贡献指南</a>
+                    <a href="cla.html" class="footer-link">贡献者协议</a>
+                </div>
+                <div class="footer-social">
+                    <a href="LXFS.html" class="social-icon"><i class="fab fa-github"></i></a>
+                    <a href="LXFS.html" class="social-icon"><i class="fab fa-weixin"></i></a>
+                    <a href="LXFS.html" class="social-icon"><i class="fab fa-qq"></i></a>
+                </div>
+            </div>
+            <div class="footer-copyright">
+                <p>© 2025 小可乐工具箱 - 开源免费工具集合 | 由可乐科技提供支持</p>
+            </div>
+        </div>
+    </footer>
+
+    <script src="assets/js/particles.js"></script>
+    <script src="assets/js/tools.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
