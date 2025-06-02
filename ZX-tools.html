@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>工具集合 - 小可乐工具站</title>
+     <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <link rel="stylesheet" href="assets/css/main.css">
+    <link rel="stylesheet" href="assets/css/animations.css">
+    <link rel="stylesheet" href="assets/css/responsive.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div id="particles-js"></div>
+    
+    <!-- 导航栏 -->
+    <nav class="navbar">
+        <div class="navbar-container">
+            <div class="navbar-brand">
+                <img src="assets/vico/main.ico" alt="小可乐工具箱" class="logo">
+                <span class="brand-name">小可乐工具箱</span>
+                <span class="tagline">工具 · 效率 · 开源</span>
+            </div>
+            <div class="navbar-menu">
+                <ul class="nav-links">
+                    <li class="nav-item"><a href="index.html"><i class="fas fa-home"></i> 首页</a></li>
+                    <li class="nav-item active"><a href="tools.html"><i class="fas fa-tools"></i> 工具</a></li>
+                    <li class="nav-item"><a href="BK.html"><i class="fas fa-file-arrow-down"></i>站点下载</a></li>
+                    <li class="nav-item"><a href="forum.html"><i class="fas fa-comments"></i> 论坛</a></li>
+                    <li class="nav-item"><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
+                </ul>
+            </div>
+            <div class="mobile-menu-btn">
+                <i class="fas fa-bars"></i>
+            </div>
+        </div>
+    </nav>
+    <main class="main-content">
+        <!-- 工具搜索 -->
+        <section class="tool-search">
+            <div class="container">
+                <div class="search-container">
+                    <input type="text" id="tool-search" placeholder="搜索工具名称或关键词..." class="search-input">
+                </div>
+            </div>
+        </section>
+
+        <!-- 工具分类 -->
+        <section class="tool-categories">
+            <div class="container">
+                <div class="category-tabs">
+                    <button class="category-tab active" data-category="all">全部工具</button>
+                    <button class="category-tab" data-category="pc">电脑工具</button>
+                    <button class="category-tab" data-category="mobile">手机工具</button>
+                    <button class="category-tab" data-category="web">网页工具</button>
+                </div>
+            </div>
+        </section>
+
+        <!-- 热门工具 -->
+        <section class="hot-tools">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-fire"></i> 热门工具</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-categories="pc,web">
+                        <a target="_blank" href="https://downloadfiles.pdfgear.com/releases/windows/pdfgear_setup_v2.1.12.exe">
+                            <div class="tool-icon">
+                            <i class="fas fa-file-pdf"></i>
+                        </div>
+                        <h3 class="tool-title">PDF工具（完全免费）</h3>
+                        <p class="tool-desc">PDFgear是多功能程序，里面包含了PDF编辑，合成，各种文件格式转化等功能，而且全部免费1</p>
+                        <div class="tool-tag">Windows10/11</div>
+                        <div class="tool-badge hot">热</div>
+                    </div></a>
+                    <div class="tool-card" data-categories="pc,mobile,web">
+                        <a target="_blank" href="https://cdkm.com/cn/?ref=www.faxianai.com">
+                            <div class="tool-icon">
+                            <i class="fas fa-exchange-alt"></i>
+                        </div>
+                        <h3 class="tool-title">格式转化</h3>
+                        <p class="tool-desc">支持格式非常多；比如：文档，电子书视频，图片，音频等格式；支持批量转换文件，离线转换文件；完全免费“无需登录”</p>
+                        <div class="tool-tag">网页端</div>
+                        <div class="tool-badge hot">热</div>
+                    </div></a>
+                    <div class="tool-card"  data-categories="pc,mobile,web">
+                        <a target="_blank" href="https://remove.photos/zh-cn/">
+                            <div class="tool-icon">
+                            <i class="fas fa-image"></i> 
+                        </div>
+                        <h3 class="tool-title">图片编辑</h3>
+                        <p class="tool-desc">支持智能抠图，无损放大，黑白照上色，在线消除，天空替换，模糊背景等</p>
+                        <div class="tool-tag">网页端</div>
+                        <div class="tool-badge hot">热</div>
+                    </div></a>
+                </div>
+            </div>
+        </section>
+
+        <!-- 全部工具 -->
+        <section class="all-tools">
+            <div class="container">
+                <h2 class="section-title"><i class="fas fa-th-large"></i> 全部工具</h2>
+                <div class="tools-grid">
+                    <div class="tool-card" data-categories="pc,mobile">
+                        <a target="_blank" href="https://share.feijipan.com/s/L10AvsmE?">
+                        <div class="tool-icon">
+                            <i class="fa-brands fa-qq"></i>
+                        </div>
+                        <h3 class="tool-title">QQ</h3>
+                        <p class="tool-desc">现代互联网社会必备的通讯软件，腾讯产品，值得您一用！</p>
+                        <div class="tool-tag">多版整合||官方产品</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="">
+                        <a target="_blank" href="https://share.feijipan.com/s/oUHxPYcI?">
+                        <div class="tool-icon">
+                            <i class="fas fa-circle-dot rec-icon"></i>
+                        </div>
+                        <h3 class="tool-title">录屏软件整合</h3>
+                        <p class="tool-desc">多款Mac端录频程序，因条件有限原因无法亲测，有条件的用户，可以将使用情况通过邮箱反馈给站长，让网站内容更全面</p>
+                        <div class="tool-tag">Mac端</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://share.feijipan.com/s/jv0EBMrE?">
+                        <div class="tool-icon">
+                            <i class="fas fa-hard-drive disk-icon"></i>
+                        </div>
+                        <h3 class="tool-title">磁盘管理</h3>
+                        <p class="tool-desc">是一款可以能够可视化管理电脑磁盘的程序，让你清楚知道电脑文件占用大小以及有助于正确清理磁盘的作用</p>
+                        <div class="tool-tag">Windows10/11</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="">
+                        <a target="_blank" href="https://share.feijipan.com/s/i40EG5kv?">
+                        <div class="tool-icon">
+                           <i class="fas fa-video meeting-icon"></i>
+                        </div>
+                         <h3 class="tool-title">腾讯会议</h3>
+                        <p class="tool-desc">让工作会议更便捷；程序含有多种功能，让你工作无忧，实现高效率开会，不管你在哪，只要你拥有了它，不管你在哪，都能准时开会；程序还用于各种面试考试等</p>
+                        <div class="tool-tag">Mac端</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://share.feijipan.com/s/As0EHDpk?">
+                        <div class="tool-icon">
+                            <i class="fas fa-arrows-rotate update-icon"></i>
+                        </div>
+                        <h3 class="tool-title">KeyGen</h3>
+                        <p class="tool-desc">让你对激活Windows系统毫无忧愁的程序，只需你运行程序，程序会自动帮你激活系统，支持多种版本激活</p>
+                        <div class="tool-tag">Windows10/11</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://share.feijipan.com/s/oO0EH8TZ?">
+                        <div class="tool-icon">
+                            <i class="fas fa-wrench maintenance-icon"></i>
+                        </div>
+                         <h3 class="tool-title">PE系统</h3>
+                        <p class="tool-desc">拥有它的那一刻起，你的电脑你自己也能救；这款程序支持电脑系统重装，管理，维护等；整个程序页面整洁，无任何广告，完全免费，是电脑第一强管家</p>
+                        <div class="tool-tag">Windows10/11（有些不兼容）</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="pc">
+                        <a target="_blank" href="https://share.feijipan.com/s/xB0APWSa?">
+                        <div class="tool-icon">
+                            <i class="fas fa-music soda-music-icon"></i>
+                        </div>
+                        <h3 class="tool-title">汽水音乐</h3>
+                        <p class="tool-desc">高质量音乐，广告可以领取VIP，有多种听歌模式，是音乐的天王</p>
+                        <div class="tool-tag">win10/11||多版本</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="pc,mobile">
+                        <a target="_blank" href="https://share.feijipan.com/s/V60AXSLY?">
+                        <div class="tool-icon">
+                            <i class="fas fa-music music-icon"></i>
+                        </div>
+                        <h3 class="tool-title">QQ音乐</h3>
+                        <p class="tool-desc">音乐平台，有海量精品音乐供你来娱乐，含AI唱歌，写歌词等等</p>
+                        <div class="tool-tag">win10/11||多版本软件</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="web，pc">
+                        <a target="_blank" href="https://gonghui.k0s.cn/">
+                        <div class="tool-icon">
+                           <i class="fas fa-tower-observation alert-icon"></i>
+                        </div>
+                        <h3 class="tool-title">红色警报2</h3>
+                        <p class="tool-desc">红色警报2网页版与正版相似，可进行娱乐游玩；提醒：不要沉迷于网络游戏！</p>
+                        <div class="tool-tag">网页版|电脑运行</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="pc,mobile">
+                        <a target="_blank" href="https://julebu.co/ref/WERZ1AE9">
+                        <div class="tool-icon">
+                           <i class="fas fa-language english-icon"></i>
+                        </div>
+                        <h3 class="tool-title">句乐部（英语学习）</h3>
+                        <p class="tool-desc">该站点可以零基础学习英语，里面包含有3500单词，40篇短文，807高频句子等课程供你学习，简直就是第三人称一对一辅导，网站涵盖有免费和付费课程，可以按照需求进行使用</p>
+                        <div class="tool-tag">网页端||多端均可运行</div></a>
+                    </div>
+                    <div class="tool-card" data-categories="pc,mobile">
+                        <a target="_blank" href="https://transmart.qq.com/zh-CN/intro">
+                        <div class="tool-icon">
+                            <i class="fas fa-language translation-icon"></i>
+                        </div>
+                        <h3 class="tool-title">腾讯交互翻译</h3>
+                        <p class="tool-desc">站点页面整洁，无广告，有实时翻译和文件翻译两大功能；仅需登录站点，即可免费使用翻译功能，文件翻译保留文件格式，只翻译文件，非常方便！</p>
+                        <div class="tool-tag">网页端||多端均可运行</div></a>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+                    <!-- 视频教程模块 -->
+<section class="video-tutorial">
+    <div class="container">
+        <div class="tutorial-card">
+            <div class="tutorial-header">
+                <h2><i class="fas fa-film"></i> 工具使用/下载教程（<a target="_blank" href="#" style="color:#4a6bff">工具使用视频教程</a>）</h2>
+                <div class="tutorial-steps">
+                    <div class="step">
+                        <div class="step-number">1</div>
+                        <div class="step-content">
+                            <h3>选择工具</h3>
+                            <p>从分类或搜索中找到您需要的工具</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">2</div>
+                        <div class="step-content">
+                            <h3>查看详情</h3>
+                            <p>光标放置在工具卡片，查看工具详情</p>
+                        </div>
+                    </div>
+                    <div class="step">
+                        <div class="step-number">3</div>
+                        <div class="step-content">
+                            <h3>使用/下载</h3>
+                            <p>在线使用或下载到本地</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</section>
+
+    </main>
+
+    <footer class="footer">
+        <div class="container">
+            <div class="footer-content">
+                <div class="footer-links">
+                    <a target="_blank" href="about.html" class="footer-link">关于我们</a>
+                    <a target="_blank" href="license.html" class="footer-link">开源协议</a>
+                    <a target="_blank" href="contribute.html" class="footer-link">贡献指南</a>
+                    <a target="_blank" href="cla.html" class="footer-link">贡献者协议</a>
+                </div>
+                <div class="footer-social">
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-github"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-weixin"></i></a>
+                    <a target="_blank" href="LXFS.html" class="social-icon"><i class="fab fa-qq"></i></a>
+                </div>
+<div class="footer-copyright">
+    <p>© 2025 小可乐工具站 - 开源免费工具集合 | 由可乐科技提供支持</p>
+        <div class="friend-links-container">
+           <button class="friend-links-btn">友情链接 ▼</button>
+              <div class="friend-links-dropdown" id="friendLinksDropdown">
+              <a href="https://www.codeus.cn/" target="_blank">ZiYuanHub</a>
+        </div>
+    </div>
+</div>
+    </footer>
+
+    <script src="assets/js/particles.js"></script>
+    <script src="assets/js/tools.js"></script>
+    <script src="assets/js/main.js"></script>
+</body>
+</html>
