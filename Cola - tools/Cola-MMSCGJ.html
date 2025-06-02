@@ -1,0 +1,559 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机密码生成器 - 小可乐工具站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4CAF50;
+            --secondary-color: #388E3C;
+            --accent-color: #81C784;
+            --light-color: #E8F5E9;
+            --dark-color: #2E7D32;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(76, 175, 80, 0.15);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            opacity: 0.8;
+        }
+        
+        .generator-box {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+        }
+        
+        .password-display {
+            display: flex;
+            margin-bottom: 20px;
+        }
+        
+        .password-display input {
+            flex: 1;
+            padding: 12px 15px;
+            border: 1px solid #ddd;
+            border-radius: var(--border-radius) 0 0 var(--border-radius);
+            font-size: 16px;
+            font-family: 'Courier New', monospace;
+            letter-spacing: 1px;
+        }
+        
+        .password-display button {
+            padding: 0 15px;
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            border-radius: 0 var(--border-radius) var(--border-radius) 0;
+            cursor: pointer;
+            transition: var(--transition);
+        }
+        
+        .password-display button:hover {
+            background: var(--secondary-color);
+        }
+        
+        .options-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        .option-item {
+            margin-bottom: 15px;
+        }
+        
+        .option-item label {
+            display: flex;
+            align-items: center;
+            cursor: pointer;
+        }
+        
+        .option-item input[type="checkbox"] {
+            margin-right: 8px;
+        }
+        
+        .option-item input[type="range"] {
+            width: 100%;
+        }
+        
+        .length-display {
+            text-align: center;
+            font-weight: 500;
+            margin-top: 5px;
+        }
+        
+        .strength-meter {
+            height: 8px;
+            background: #e0e0e0;
+            border-radius: 4px;
+            margin-top: 20px;
+            overflow: hidden;
+        }
+        
+        .strength-bar {
+            height: 100%;
+            width: 0%;
+            background: #e0e0e0;
+            transition: var(--transition);
+        }
+        
+        .strength-label {
+            font-size: 12px;
+            margin-top: 5px;
+            text-align: right;
+            color: #666;
+        }
+        
+        .actions {
+            display: flex;
+            gap: 10px;
+            margin-top: 20px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: var(--border-radius);
+            font-size: 14px;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light-color);
+        }
+        
+        .password-history {
+            margin-top: 30px;
+        }
+        
+        .history-title {
+            font-size: 1.1rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+        }
+        
+        .history-list {
+            list-style: none;
+        }
+        
+        .history-item {
+            display: flex;
+            justify-content: space-between;
+            padding: 10px 15px;
+            background: white;
+            border-radius: var(--border-radius);
+            margin-bottom: 8px;
+            font-family: 'Courier New', monospace;
+        }
+        
+        .history-item button {
+            background: none;
+            border: none;
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 20px 0;
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 600px) {
+            .options-grid {
+                grid-template-columns: 1fr;
+            }
+            
+            .actions {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>随机密码生成器</h1>
+            <p class="subtitle">安全 · 高效 · 实用</p>
+        </header>
+        
+        <div class="generator-box">
+            <div class="password-display">
+                <input type="text" id="passwordOutput" readonly>
+                <button id="copyBtn" title="复制密码">
+                    <i class="far fa-copy"></i>
+                </button>
+            </div>
+            
+            <div class="options-grid">
+                <div class="option-item">
+                    <label>
+                        <input type="checkbox" id="uppercase" checked>
+                        包含大写字母 (A-Z)
+                    </label>
+                </div>
+                
+                <div class="option-item">
+                    <label>
+                        <input type="checkbox" id="lowercase" checked>
+                        包含小写字母 (a-z)
+                    </label>
+                </div>
+                
+                <div class="option-item">
+                    <label>
+                        <input type="checkbox" id="numbers" checked>
+                        包含数字 (0-9)
+                    </label>
+                </div>
+                
+                <div class="option-item">
+                    <label>
+                        <input type="checkbox" id="symbols">
+                        包含特殊符号 (!@#$%^&*)
+                    </label>
+                </div>
+                
+                <div class="option-item">
+                    <label for="length">密码长度: <span id="lengthValue">12</span></label>
+                    <input type="range" id="length" min="4" max="32" value="12">
+                </div>
+                
+                <div class="option-item">
+                    <label>
+                        <input type="checkbox" id="excludeSimilar">
+                        排除相似字符 (如1,l,I,0,O)
+                    </label>
+                </div>
+            </div>
+            
+            <div class="strength-meter">
+                <div class="strength-bar" id="strengthBar"></div>
+            </div>
+            <div class="strength-label" id="strengthLabel">密码强度: 中等</div>
+            
+            <div class="actions">
+                <button id="generateBtn" class="btn btn-primary">
+                    <i class="fas fa-sync-alt"></i> 生成密码
+                </button>
+                <button id="saveBtn" class="btn btn-secondary">
+                    <i class="far fa-save"></i> 保存密码
+                </button>
+                <button id="downloadBtn" class="btn btn-secondary">
+                    <i class="fas fa-download"></i> 下载为文本
+                </button>
+            </div>
+            
+            <div class="password-history">
+                <h3 class="history-title">历史记录</h3>
+                <ul class="history-list" id="historyList">
+                    <!-- 历史记录将在这里动态加载 -->
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 小可乐工具站 | 随机密码生成器 | 安全可靠的密码生成工具</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // DOM元素
+            const passwordOutput = document.getElementById('passwordOutput');
+            const copyBtn = document.getElementById('copyBtn');
+            const generateBtn = document.getElementById('generateBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const uppercase = document.getElementById('uppercase');
+            const lowercase = document.getElementById('lowercase');
+            const numbers = document.getElementById('numbers');
+            const symbols = document.getElementById('symbols');
+            const excludeSimilar = document.getElementById('excludeSimilar');
+            const length = document.getElementById('length');
+            const lengthValue = document.getElementById('lengthValue');
+            const strengthBar = document.getElementById('strengthBar');
+            const strengthLabel = document.getElementById('strengthLabel');
+            const historyList = document.getElementById('historyList');
+            
+            // 字符集
+            const charSets = {
+                uppercase: 'ABCDEFGHIJKLMNOPQRSTUVWXYZ',
+                lowercase: 'abcdefghijklmnopqrstuvwxyz',
+                numbers: '0123456789',
+                symbols: '!@#$%^&*()_+-=[]{}|;:,.<>?'
+            };
+            
+            // 相似字符
+            const similarChars = '1lI0Oo';
+            
+            // 加载历史记录
+            let passwordHistory = JSON.parse(localStorage.getItem('passwordHistory')) || [];
+            renderHistory();
+            
+            // 更新长度显示
+            length.addEventListener('input', function() {
+                lengthValue.textContent = this.value;
+            });
+            
+            // 生成密码
+            function generatePassword() {
+                let chars = '';
+                
+                if (uppercase.checked) chars += charSets.uppercase;
+                if (lowercase.checked) chars += charSets.lowercase;
+                if (numbers.checked) chars += charSets.numbers;
+                if (symbols.checked) chars += charSets.symbols;
+                
+                // 如果没有选择任何字符集，使用默认
+                if (!chars) {
+                    chars = charSets.lowercase + charSets.uppercase + charSets.numbers;
+                    lowercase.checked = uppercase.checked = numbers.checked = true;
+                }
+                
+                // 排除相似字符
+                if (excludeSimilar.checked) {
+                    chars = chars.split('').filter(c => !similarChars.includes(c)).join('');
+                }
+                
+                const passwordLength = parseInt(length.value);
+                let password = '';
+                
+                for (let i = 0; i < passwordLength; i++) {
+                    const randomIndex = Math.floor(Math.random() * chars.length);
+                    password += chars[randomIndex];
+                }
+                
+                passwordOutput.value = password;
+                updatePasswordStrength(password);
+            }
+            
+            // 更新密码强度
+            function updatePasswordStrength(password) {
+                let strength = 0;
+                
+                // 长度评分
+                strength += Math.min(password.length / 4, 3);
+                
+                // 字符种类评分
+                const hasUppercase = /[A-Z]/.test(password);
+                const hasLowercase = /[a-z]/.test(password);
+                const hasNumbers = /[0-9]/.test(password);
+                const hasSymbols = /[^A-Za-z0-9]/.test(password);
+                
+                strength += hasUppercase ? 1 : 0;
+                strength += hasLowercase ? 1 : 0;
+                strength += hasNumbers ? 1 : 0;
+                strength += hasSymbols ? 1.5 : 0;
+                
+                // 计算强度百分比 (0-100)
+                const strengthPercent = Math.min(Math.floor(strength / 7.5 * 100), 100);
+                
+                // 更新UI
+                strengthBar.style.width = strengthPercent + '%';
+                
+                if (strengthPercent < 40) {
+                    strengthBar.style.backgroundColor = '#e74c3c';
+                    strengthLabel.textContent = '密码强度: 弱';
+                } else if (strengthPercent < 70) {
+                    strengthBar.style.backgroundColor = '#f39c12';
+                    strengthLabel.textContent = '密码强度: 中等';
+                } else {
+                    strengthBar.style.backgroundColor = '#2ecc71';
+                    strengthLabel.textContent = '密码强度: 强';
+                }
+            }
+            
+            // 复制密码
+            copyBtn.addEventListener('click', function() {
+                if (!passwordOutput.value) return;
+                
+                passwordOutput.select();
+                document.execCommand('copy');
+                
+                // 显示复制成功提示
+                const originalText = copyBtn.innerHTML;
+                copyBtn.innerHTML = '<i class="fas fa-check"></i>';
+                copyBtn.title = '已复制';
+                
+                setTimeout(() => {
+                    copyBtn.innerHTML = originalText;
+                    copyBtn.title = '复制密码';
+                }, 2000);
+            });
+            
+            // 保存密码到历史记录
+            saveBtn.addEventListener('click', function() {
+                if (!passwordOutput.value) return;
+                
+                // 添加到历史记录
+                passwordHistory.unshift({
+                    password: passwordOutput.value,
+                    date: new Date().toLocaleString()
+                });
+                
+                // 限制历史记录数量
+                if (passwordHistory.length > 10) {
+                    passwordHistory = passwordHistory.slice(0, 10);
+                }
+                
+                // 保存到本地存储
+                localStorage.setItem('passwordHistory', JSON.stringify(passwordHistory));
+                
+                // 更新UI
+                renderHistory();
+                
+                // 显示保存成功提示
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> 已保存';
+                
+                setTimeout(() => {
+                    saveBtn.innerHTML = originalText;
+                }, 2000);
+            });
+            
+            // 下载密码为文本文件
+            downloadBtn.addEventListener('click', function() {
+                if (!passwordOutput.value) return;
+                
+                const blob = new Blob([`生成的密码: ${passwordOutput.value}\n生成时间: ${new Date().toLocaleString()}`], {type: 'text/plain'});
+                const url = URL.createObjectURL(blob);
+                
+                const link = document.createElement('a');
+                link.href = url;
+                link.download = `小可乐工具站——密码_${new Date().toISOString().slice(0,10)}.txt`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                setTimeout(() => {
+                    URL.revokeObjectURL(url);
+                }, 100);
+            });
+            
+            // 渲染历史记录
+            function renderHistory() {
+                historyList.innerHTML = '';
+                
+                passwordHistory.forEach((item, index) => {
+                    const li = document.createElement('li');
+                    li.className = 'history-item';
+                    li.innerHTML = `
+                        <span>${index + 1}. ${item.password}</span>
+                        <button onclick="copyHistoryPassword('${item.password}')">
+                            <i class="far fa-copy"></i>
+                        </button>
+                    `;
+                    historyList.appendChild(li);
+                });
+            }
+            
+            // 复制历史密码 (全局函数)
+            window.copyHistoryPassword = function(password) {
+                const textarea = document.createElement('textarea');
+                textarea.value = password;
+                document.body.appendChild(textarea);
+                textarea.select();
+                document.execCommand('copy');
+                document.body.removeChild(textarea);
+                
+                alert('密码已复制到剪贴板');
+            };
+            
+            // 生成按钮点击事件
+            generateBtn.addEventListener('click', generatePassword);
+            
+            // 初始生成一个密码
+            generatePassword();
+        });
+    </script>
+</body>
+</html>
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

@@ -1,0 +1,466 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>豆瓣热榜 - 小可乐工具站</title>
+    <style>
+        :root {
+            --primary-color: #007722; /* 豆瓣绿 */
+            --secondary-color: #006633;
+            --light-color: #f7f7f7;
+            --dark-color: #333333;
+            --border-color: #eaeaea;
+            --rating-color: #ffac2d;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+            line-height: 1.6;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+        
+        h1 {
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: normal;
+        }
+        
+        .description {
+            color: #666;
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .controls {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            justify-content: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            background-color: white;
+            border-radius: 8px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 5px;
+            background-color: var(--primary-color);
+            color: white;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            margin: 20px 0;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .hotlist-container {
+            background-color: white;
+            border-radius: 8px;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.05);
+            margin-bottom: 30px;
+        }
+        
+        .hotlist-header {
+            padding: 15px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .hotlist-title {
+            font-size: 18px;
+            font-weight: 500;
+        }
+        
+        .hotlist-update {
+            font-size: 14px;
+            opacity: 0.9;
+        }
+        
+        .hotlist-items {
+            padding: 0;
+        }
+        
+        .hotlist-item {
+            display: flex;
+            padding: 15px 20px;
+            border-bottom: 1px solid var(--border-color);
+            transition: background-color 0.2s ease;
+        }
+        
+        .hotlist-item:hover {
+            background-color: #f9f9f9;
+        }
+        
+        .item-rank {
+            font-size: 18px;
+            color: #999;
+            width: 40px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+        }
+        
+        .item-content {
+            flex: 1;
+            display: flex;
+            gap: 15px;
+        }
+        
+        .item-poster {
+            width: 80px;
+            height: 120px;
+            border-radius: 4px;
+            object-fit: cover;
+            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .item-poster:hover {
+            transform: scale(1.05);
+        }
+        
+        .item-info {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        
+        .item-title {
+            font-size: 18px;
+            margin-bottom: 5px;
+            color: var(--dark-color);
+        }
+        
+        .item-title a {
+            color: inherit;
+            text-decoration: none;
+        }
+        
+        .item-title a:hover {
+            color: var(--primary-color);
+            text-decoration: underline;
+        }
+        
+        .item-meta {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+        
+        .item-rating {
+            display: flex;
+            align-items: center;
+            margin-bottom: 8px;
+        }
+        
+        .rating-stars {
+            color: var(--rating-color);
+            font-size: 16px;
+            margin-right: 8px;
+        }
+        
+        .rating-value {
+            font-weight: bold;
+            color: var(--rating-color);
+        }
+        
+        .item-desc {
+            font-size: 14px;
+            color: #666;
+            line-height: 1.5;
+            display: -webkit-box;
+            -webkit-line-clamp: 3;
+            -webkit-box-orient: vertical;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .toast {
+            position: fixed;
+            bottom: 20px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--dark-color);
+            color: white;
+            padding: 12px 24px;
+            border-radius: 5px;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            z-index: 1000;
+        }
+        
+        .toast.show {
+            opacity: 1;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px 0;
+            border-top: 1px solid var(--border-color);
+            color: #666;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .item-content {
+                flex-direction: column;
+            }
+            
+            .item-poster {
+                width: 100%;
+                height: auto;
+                max-height: 200px;
+            }
+            
+            .hotlist-item {
+                flex-direction: column;
+            }
+            
+            .item-rank {
+                width: 100%;
+                justify-content: flex-start;
+                margin-bottom: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>豆瓣热榜</h1>
+            <p class="description">实时获取豆瓣热门电影、电视剧、综艺等榜单数据</p>
+        </header>
+        
+        <div class="controls">
+            <button id="refreshBtn" class="btn">刷新榜单</button>
+        </div>
+        
+        <div class="loading">
+            <div class="spinner"></div>
+            <p>小可乐拼命加载榜单数据中...</p>
+        </div>
+        
+        <div class="hotlist-container" id="hotlistContainer">
+            <div class="hotlist-header">
+                <div class="hotlist-title">豆瓣热榜</div>
+                <div class="hotlist-update" id="updateTime"></div>
+            </div>
+            <div class="hotlist-items" id="hotlistItems">
+                <!-- 动态填充的热门项目 -->
+            </div>
+        </div>
+        
+        <div class="toast" id="toast"></div>
+    </div>
+    
+    <footer>
+        <p>© 2025 小可乐工具站 提供技术 | 数据来源: 豆瓣 | 内容仅供参考</p>
+    </footer>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const refreshBtn = document.getElementById('refreshBtn');
+            const loadingEl = document.querySelector('.loading');
+            const hotlistContainer = document.getElementById('hotlistContainer');
+            const hotlistItems = document.getElementById('hotlistItems');
+            const updateTimeEl = document.getElementById('updateTime');
+            const toast = document.getElementById('toast');
+            
+            // 显示加载状态
+            function showLoading() {
+                loadingEl.style.display = 'block';
+                hotlistContainer.style.display = 'none';
+            }
+            
+            // 隐藏加载状态
+            function hideLoading() {
+                loadingEl.style.display = 'none';
+                hotlistContainer.style.display = 'block';
+            }
+            
+            // 显示提示信息
+            function showToast(message, duration = 3000) {
+                toast.textContent = message;
+                toast.classList.add('show');
+                
+                setTimeout(() => {
+                    toast.classList.remove('show');
+                }, duration);
+            }
+            
+            // 渲染星星评分
+            function renderRating(rating) {
+                if (!rating || rating === '0.0') return '暂无评分';
+                
+                const num = parseFloat(rating);
+                const fullStars = Math.floor(num / 2);
+                const halfStar = num % 2 >= 1 ? 1 : 0;
+                const emptyStars = 5 - fullStars - halfStar;
+                
+                let stars = '';
+                for (let i = 0; i < fullStars; i++) {
+                    stars += '★';
+                }
+                if (halfStar) {
+                    stars += '☆';
+                }
+                for (let i = 0; i < emptyStars; i++) {
+                    stars += '☆';
+                }
+                
+                return `<span class="rating-stars">${stars}</span><span class="rating-value">${num}</span>`;
+            }
+            
+            // 获取豆瓣热门榜单数据
+            async function fetchHotlist() {
+                showLoading();
+                
+                try {
+                    // 添加时间戳防止缓存
+                    const timestamp = new Date().getTime();
+                    const apiUrl = `https://api.vvhan.com/api/hotlist/douban?timestamp=${timestamp}`;
+                    
+                    const response = await fetch(apiUrl);
+                    const data = await response.json();
+                    
+                    if (data && data.success && data.data) {
+                        renderHotlist(data.data);
+                        updateTimeEl.textContent = `更新时间: ${new Date().toLocaleString()}`;
+                        hideLoading();
+                        showToast('小可乐终于拿到数据了🎇');
+                    } else {
+                        throw new Error('无效的API响应');
+                    }
+                } catch (error) {
+                    hideLoading();
+                    console.error('获取榜单数据失败:', error);
+                    showToast('获取榜单数据失败，请重试☹️');
+                }
+            }
+            
+            // 渲染热门榜单
+            function renderHotlist(items) {
+                hotlistItems.innerHTML = '';
+                
+                if (!items || items.length === 0) {
+                    hotlistItems.innerHTML = '<div style="padding: 20px; text-align: center; color: #666;">暂无数据</div>';
+                    return;
+                }
+                
+                items.forEach((item, index) => {
+                    const itemEl = document.createElement('div');
+                    itemEl.className = 'hotlist-item';
+                    
+                    const rank = index + 1;
+                    const ratingHtml = item.rating ? renderRating(item.rating) : '无法获取评分';
+                    
+                    itemEl.innerHTML = `
+                        <div class="item-rank">${rank}</div>
+                        <div class="item-content">
+                            <img src="${item.pic || 'https://img9.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/blank.gif'}" 
+                                 alt="${item.title}" 
+                                 class="item-poster"
+                                 onerror="this.src='https://img9.doubanio.com/f/movie/8dd0c794499fe925ae2ae89ee30cd225750457b4/pics/movie/blank.gif'">
+                            <div class="item-info">
+                                <h3 class="item-title">
+                                    <a href="${item.url || '#'}" target="_blank">${item.title}</a>
+                                </h3>
+                                <div class="item-meta">
+                                    ${item.desc || '无法获取描述'}
+                                </div>
+                                <div class="item-rating">
+                                    ${ratingHtml}
+                                </div>
+                                <div class="item-desc">
+                                    ${item.hot || '无法获取热度信息'}
+                                </div>
+                            </div>
+                        </div>
+                    `;
+                    
+                    hotlistItems.appendChild(itemEl);
+                });
+            }
+            
+            // 事件监听
+            refreshBtn.addEventListener('click', fetchHotlist);
+            
+            // 初始加载数据
+            fetchHotlist();
+        });
+    </script>
+</body>
+</html>
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

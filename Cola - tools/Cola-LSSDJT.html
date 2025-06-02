@@ -1,0 +1,304 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>历史上的今天 - 小可乐工具站</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #6c757d;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 30px 0;
+            background: linear-gradient(135deg, var(--primary-color), #9b59b6);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .date-display {
+            font-size: 1.2rem;
+            margin-top: 10px;
+            opacity: 0.9;
+        }
+        
+        .content-box {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .history-image-container {
+            width: 100%;
+            max-width: 800px;
+            margin-bottom: 30px;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+            position: relative;
+            background-color: #eee;
+            min-height: 450px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .history-image {
+            width: 100%;
+            height: auto;
+            display: block;
+            transition: transform 0.3s;
+        }
+        
+        .history-image:hover {
+            transform: scale(1.02);
+        }
+        
+        .image-placeholder {
+            text-align: center;
+            color: var(--secondary-color);
+            padding: 30px;
+        }
+        
+        .image-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .refresh-button {
+            padding: 12px 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 30px;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            box-shadow: 0 3px 10px rgba(142, 68, 173, 0.4);
+        }
+        
+        .refresh-button:hover {
+            background-color: #7d3c98;
+            transform: translateY(-2px);
+        }
+        
+        .loading {
+            position: absolute;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background-color: rgba(255, 255, 255, 0.8);
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            z-index: 10;
+            display: none;
+        }
+        
+        .loading i {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            animation: spin 1s linear infinite;
+            margin-bottom: 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+        
+        .image-info {
+            margin-top: 15px;
+            font-size: 0.9rem;
+            color: var(--secondary-color);
+            text-align: center;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .history-image-container {
+                min-height: 300px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-history"></i> 历史上的今天 - 图片版</h1>
+            <div class="date-display" id="current-date"></div>
+        </header>
+        
+        <div class="content-box">
+            <div class="history-image-container" id="image-container">
+                <div class="image-placeholder" id="image-placeholder">
+                    <i class="fas fa-image"></i>
+                    <p>点击下方按钮获取历史上的今天事件图片</p>
+                </div>
+                <img src="" alt="历史上的今天" class="history-image" id="history-image" style="display: none;">
+                
+                <div class="loading" id="loading">
+                    <i class="fas fa-spinner"></i>
+                    <p>小可乐正在拼命加载数据中...</p>
+                </div>
+            </div>
+            
+            <div class="error-message" id="error-message">
+                <i class="fas fa-exclamation-triangle"></i>
+                <p id="error-text"></p>
+            </div>
+            
+            <button class="refresh-button" id="refresh-button">
+                <i class="fas fa-sync-alt"></i> 获取历史事件图片
+            </button>
+            
+            <div class="image-info">
+                <p>带你走入历史的今天</p>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 小可乐工具站 | 数据信息由:  <a href="https://v2.xxapi.cn/api/historypic" target="_blank">XXAPI</a> 提供支持</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentDateElement = document.getElementById('current-date');
+            const imageContainer = document.getElementById('image-container');
+            const imagePlaceholder = document.getElementById('image-placeholder');
+            const historyImage = document.getElementById('history-image');
+            const loadingElement = document.getElementById('loading');
+            const errorMessage = document.getElementById('error-message');
+            const errorText = document.getElementById('error-text');
+            const refreshButton = document.getElementById('refresh-button');
+            
+            // 显示当前日期
+            const now = new Date();
+            const options = { year: 'numeric', month: 'long', day: 'numeric', weekday: 'long' };
+            currentDateElement.textContent = now.toLocaleDateString('zh-CN', options);
+            
+            // 获取历史图片
+            function fetchHistoryImage() {
+                // 显示加载状态
+                loadingElement.style.display = 'flex';
+                imagePlaceholder.style.display = 'none';
+                historyImage.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // 调用API
+                fetch('https://v2.xxapi.cn/api/historypic')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应不正常');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.code !== 200) {
+                            throw new Error(data.msg || '获取数据失败');
+                        }
+                        
+                        // 显示图片
+                        historyImage.src = data.data;
+                        historyImage.style.display = 'block';
+                        imagePlaceholder.style.display = 'none';
+                        
+                        // 图片加载完成后隐藏加载状态
+                        historyImage.onload = function() {
+                            loadingElement.style.display = 'none';
+                        };
+                        
+                        // 处理可能的图片加载错误
+                        historyImage.onerror = function() {
+                            loadingElement.style.display = 'none';
+                            showError('图片加载失败，请重试');
+                        };
+                    })
+                    .catch(error => {
+                        loadingElement.style.display = 'none';
+                        showError(error.message || '获取历史图片失败，请稍后再试');
+                    });
+            }
+            
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+                imagePlaceholder.style.display = 'flex';
+                historyImage.style.display = 'none';
+            }
+            
+            // 点击按钮获取图片
+            refreshButton.addEventListener('click', fetchHistoryImage);
+            
+            // 初始加载一次
+            fetchHistoryImage();
+        });
+    </script>
+</body>
+</html>
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

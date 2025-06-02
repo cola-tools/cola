@@ -1,0 +1,364 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机猫咪图片 - 小可乐工具站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6d4aff;
+            --secondary-color: #5a3ae8;
+            --accent-color: #8c6dff;
+            --light-color: #f9f7ff;
+            --dark-color: #333344;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(109, 74, 255, 0.15);
+            --border-radius: 16px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding: 20px 0;
+        }
+        
+        h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 1rem;
+            color: #666;
+            opacity: 0.8;
+        }
+        
+        .main-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .cat-container {
+            width: 100%;
+            max-width: 600px;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            margin-bottom: 30px;
+            position: relative;
+            aspect-ratio: 1/1;
+        }
+        
+        .cat-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            color: #999;
+        }
+        
+        .cat-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .cat-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .cat-info {
+            padding: 20px;
+            background: var(--card-bg);
+            border-radius: 0 0 var(--border-radius) var(--border-radius);
+        }
+        
+        .cat-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .cat-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 40px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(109, 74, 255, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light-color);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(109, 74, 255, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 20px 0;
+            color: #999;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 2rem;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>随机猫咪图片</h1>
+            <p class="subtitle">每日更新各种可爱的猫咪图片</p>
+        </header>
+        
+        <main class="main-content">
+            <div class="cat-container" id="catContainer">
+                <div class="cat-placeholder" id="catPlaceholder">
+                    <i class="fas fa-cat"></i>
+                    <p>点击下方按钮获取猫咪图片</p>
+                </div>
+                <img class="cat-image" id="catImage" alt="随机猫咪图片">
+                <div class="cat-info" id="catInfo">
+                    <h3 class="cat-title" id="catTitle">可爱的猫咪</h3>
+                    <div class="cat-meta">
+                        <span id="catBreed">品种: 随机</span>
+                        <span id="catDate">日期: 2025-06-02</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="loading" id="loading">
+                <div class="spinner"></div>
+                <p>正在加载猫咪图片...</p>
+            </div>
+            
+            <div class="controls">
+                <button class="btn btn-primary" id="randomBtn">
+                    <i class="fas fa-random"></i>
+                    随机猫咪
+                </button>
+                <button class="btn btn-secondary" id="saveBtn">
+                    <i class="far fa-save"></i>
+                    保存图片
+                </button>
+            </div>
+        </main>
+        
+        <footer>
+            <p>© 2025 | 小可乐工具站 | 随机猫咪图片</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const catContainer = document.getElementById('catContainer');
+            const catPlaceholder = document.getElementById('catPlaceholder');
+            const catImage = document.getElementById('catImage');
+            const catTitle = document.getElementById('catTitle');
+            const catBreed = document.getElementById('catBreed');
+            const catDate = document.getElementById('catDate');
+            const randomBtn = document.getElementById('randomBtn');
+            const saveBtn = document.getElementById('saveBtn');
+            const loading = document.getElementById('loading');
+            
+            // 获取随机猫咪图片
+            function getRandomCat() {
+                loading.classList.add('show');
+                catPlaceholder.style.display = 'flex';
+                catImage.style.display = 'none';
+                
+                // 使用TheCatAPI获取随机猫咪图片
+                fetch('https://api.thecatapi.com/v1/images/search')
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应不正常');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data && data.length > 0) {
+                            displayCat(data[0]);
+                        } else {
+                            throw new Error('获取猫咪图片失败');
+                        }
+                    })
+                    .catch(error => {
+                        alert(error.message || '发生错误，请稍后再试');
+                    })
+                    .finally(() => {
+                        loading.classList.remove('show');
+                    });
+            }
+            
+            // 显示猫咪图片
+            function displayCat(catData) {
+                catImage.src = catData.url;
+                catTitle.textContent = '可爱的猫咪';
+                catBreed.textContent = `品种: ${catData.breeds && catData.breeds.length > 0 ? catData.breeds[0].name : '未知'}`;
+                catDate.textContent = `日期: ${new Date().toLocaleDateString()}`;
+                
+                catImage.style.display = 'block';
+                catPlaceholder.style.display = 'none';
+            }
+            
+            // 保存猫咪图片
+            function saveCatImage() {
+                if (!catImage.src || catImage.src.includes('data:')) {
+                    alert('请先获取一张猫咪图片');
+                    return;
+                }
+                
+                const link = document.createElement('a');
+                link.href = catImage.src;
+                link.download = `猫咪图片-${new Date().toISOString().slice(0,10)}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 显示保存成功提示
+                const originalText = saveBtn.innerHTML;
+                saveBtn.innerHTML = '<i class="fas fa-check"></i> 保存成功';
+                setTimeout(() => {
+                    saveBtn.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            // 随机猫咪按钮点击事件
+            randomBtn.addEventListener('click', getRandomCat);
+            
+            // 保存图片按钮点击事件
+            saveBtn.addEventListener('click', saveCatImage);
+            
+            // 初始加载一个随机猫咪图片
+            getRandomCat();
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

@@ -1,0 +1,350 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>风格言语生成 - 小可乐工具站</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            background-color: #f5f7fa;
+            color: #333;
+        }
+        .container {
+            background-color: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+            text-align: center;
+        }
+        h1 {
+            color: #2c3e50;
+            margin-bottom: 25px;
+            font-size: 28px;
+        }
+        .control-panel {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            margin-bottom: 25px;
+            justify-content: center;
+        }
+        .category-btn {
+            background-color: #f1f3f5;
+            color: #495057;
+            border: none;
+            padding: 12px 20px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        .category-btn:hover {
+            background-color: #e9ecef;
+        }
+        .category-btn.active {
+            background-color: #4263eb;
+            color: white;
+        }
+        .quote-container {
+            background-color: #f8f9fa;
+            border-radius: 8px;
+            padding: 30px;
+            margin: 20px 0;
+            min-height: 150px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            position: relative;
+        }
+        .quote-text {
+            font-size: 18px;
+            line-height: 1.6;
+            margin-bottom: 15px;
+        }
+        .quote-type {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: #4263eb;
+            color: white;
+            padding: 3px 8px;
+            border-radius: 4px;
+            font-size: 12px;
+        }
+        .generate-btn {
+            background-color: #4263eb;
+            color: white;
+            border: none;
+            padding: 14px 30px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            font-weight: bold;
+            transition: background-color 0.3s;
+            margin: 20px auto;
+            display: block;
+        }
+        .generate-btn:hover {
+            background-color: #364fc7;
+        }
+        .loading {
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        .spinner {
+            border: 5px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 5px solid #4263eb;
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        .error {
+            color: #e74c3c;
+            margin-top: 20px;
+            padding: 15px;
+            background-color: #fdecea;
+            border-radius: 6px;
+            text-align: center;
+            display: none;
+        }
+        .share-btns {
+            display: flex;
+            justify-content: center;
+            gap: 10px;
+            margin-top: 20px;
+        }
+        .share-btn {
+            background-color: #f1f3f5;
+            color: #495057;
+            border: none;
+            padding: 8px 15px;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 14px;
+            transition: background-color 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 5px;
+        }
+        .share-btn:hover {
+            background-color: #e9ecef;
+        }
+        .empty-state {
+            text-align: center;
+            padding: 50px 0;
+            color: #7f8c8d;
+        }
+        .empty-state img {
+            width: 100px;
+            opacity: 0.6;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <h1>风格言语生成器</h1>
+        
+        <div class="control-panel">
+            <button class="category-btn active" data-category="dutang">
+                <span>🍵</span> 毒鸡汤
+            </button>
+            <button class="category-btn" data-category="yulu">
+                <span>💼</span> 社会语录
+            </button>
+            <button class="category-btn" data-category="yiyan">
+                <span>✨</span> 一言
+            </button>
+        </div>
+        
+        <div class="quote-container" id="quote-container">
+            <div class="empty-state" id="empty-state">
+                <img src="https://cdn-icons-png.flaticon.com/512/4076/4076478.png" alt="空状态">
+                <h3>还没有内容</h3>
+                <p>选择风格并点击下方按钮生成</p>
+            </div>
+            <div class="quote-text" id="quote-text" style="display: none;"></div>
+            <div class="quote-type" id="quote-type" style="display: none;"></div>
+        </div>
+        
+        <button class="generate-btn" id="generate-btn">生成言语</button>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>小可乐拼命加载中，请稍候...</p>
+        </div>
+        
+        <div class="error" id="error"></div>
+        
+        <div class="share-btns" id="share-btns" style="display: none;">
+            <button class="share-btn" onclick="shareQuote('weibo')">
+                <span>🐦</span> 分享到微博
+            </button>
+            <button class="share-btn" onclick="shareQuote('wechat')">
+                <span>💬</span> 分享到微信
+            </button>
+            <button class="share-btn" onclick="copyQuote()">
+                <span>📋</span> 复制内容
+            </button>
+        </div>
+    </div>
+
+    <script>
+        // 当前选中的分类
+        let currentCategory = 'dutang';
+        
+        // 设置分类按钮点击事件
+        document.querySelectorAll('.category-btn').forEach(btn => {
+            btn.addEventListener('click', function() {
+                document.querySelectorAll('.category-btn').forEach(b => b.classList.remove('active'));
+                this.classList.add('active');
+                currentCategory = this.dataset.category;
+            });
+        });
+        
+        // 生成按钮点击事件
+        document.getElementById('generate-btn').addEventListener('click', function() {
+            const loadingElement = document.getElementById('loading');
+            const errorElement = document.getElementById('error');
+            const quoteTextElement = document.getElementById('quote-text');
+            const quoteTypeElement = document.getElementById('quote-type');
+            const emptyStateElement = document.getElementById('empty-state');
+            const shareBtnsElement = document.getElementById('share-btns');
+            
+            // 显示加载动画
+            loadingElement.style.display = 'block';
+            errorElement.style.display = 'none';
+            emptyStateElement.style.display = 'none';
+            quoteTextElement.style.display = 'none';
+            quoteTypeElement.style.display = 'none';
+            shareBtnsElement.style.display = 'none';
+            
+            // 调用API获取内容
+            fetchQuote(currentCategory);
+        });
+        
+        function fetchQuote(category) {
+            let apiUrl = '';
+            let typeName = '';
+            
+            // 根据选择的分类设置API地址和类型名称
+            switch(category) {
+                case 'dutang':
+                    apiUrl = 'https://api.oick.cn/dutang/api.php';
+                    typeName = '毒鸡汤';
+                    break;
+                case 'yulu':
+                    apiUrl = 'https://api.oick.cn/yulu/api.php';
+                    typeName = '社会语录';
+                    break;
+                case 'yiyan':
+                    apiUrl = 'https://api.oick.cn/yiyan/api.php';
+                    typeName = '一言';
+                    break;
+                default:
+                    apiUrl = 'https://api.oick.cn/dutang/api.php';
+                    typeName = '毒鸡汤';
+            }
+            
+            fetch(apiUrl)
+                .then(response => {
+                    if (!response.ok) {
+                        throw new Error('网络跑丢了，请稍后再试');
+                    }
+                    return response.text();
+                })
+                .then(text => {
+                    // 处理返回的内容
+                    displayQuote({
+                        type: typeName,
+                        content: text.trim()
+                    });
+                    
+                    document.getElementById('loading').style.display = 'none';
+                })
+                .catch(error => {
+                    console.error('获取内容失败:', error);
+                    document.getElementById('loading').style.display = 'none';
+                    document.getElementById('error').textContent = '获取内容失败: ' + error.message;
+                    document.getElementById('error').style.display = 'block';
+                    document.getElementById('empty-state').style.display = 'block';
+                });
+        }
+        
+        function displayQuote(quote) {
+            const quoteTextElement = document.getElementById('quote-text');
+            const quoteTypeElement = document.getElementById('quote-type');
+            const emptyStateElement = document.getElementById('empty-state');
+            const shareBtnsElement = document.getElementById('share-btns');
+            
+            quoteTextElement.textContent = quote.content;
+            quoteTypeElement.textContent = quote.type;
+            
+            quoteTextElement.style.display = 'block';
+            quoteTypeElement.style.display = 'block';
+            shareBtnsElement.style.display = 'flex';
+            emptyStateElement.style.display = 'none';
+        }
+        
+        function shareQuote(platform) {
+            const quoteText = document.getElementById('quote-text').textContent;
+            const quoteType = document.getElementById('quote-type').textContent;
+            let shareUrl = '';
+            
+            switch(platform) {
+                case 'weibo':
+                    shareUrl = `https://service.weibo.com/share/share.php?url=${encodeURIComponent(window.location.href)}&title=${encodeURIComponent(`${quoteType}: ${quoteText} - 来自风格言语生成器`)}`;
+                    break;
+                case 'wechat':
+                    alert(`当前功能不可用，请复制下面的内容分享到微信：\n\n【${quoteType}】\n${quoteText}`);
+                    return;
+                default:
+                    return;
+            }
+            
+            window.open(shareUrl, '_blank', 'width=550,height=420');
+        }
+        
+        function copyQuote() {
+            const quoteText = document.getElementById('quote-text').textContent;
+            const quoteType = document.getElementById('quote-type').textContent;
+            const fullText = `【${quoteType}】\n${quoteText}`;
+            
+            navigator.clipboard.writeText(fullText).then(() => {
+                alert('内容已复制到剪贴板！');
+            }).catch(err => {
+                console.error('复制失败:', err);
+                alert('复制失败，请手动选择文本复制。');
+            });
+        }
+    </script>
+</body>
+</html>
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

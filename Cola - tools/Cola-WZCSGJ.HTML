@@ -1,0 +1,438 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>网站测速工具 - 小可乐工具站</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --success-color: #2ecc71;
+            --warning-color: #f39c12;
+            --danger-color: #e74c3c;
+            --dark-color: #2c3e50;
+            --light-color: #ecf0f1;
+        }
+        
+        body {
+            background-color: #f8f9fa;
+            padding-top: 20px;
+            padding-bottom: 40px;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        .main-container {
+            max-width: 800px;
+            margin: 0 auto;
+        }
+        
+        .header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .header h1 {
+            color: var(--dark-color);
+            font-weight: 700;
+            margin-bottom: 10px;
+        }
+        
+        .header p {
+            color: var(--dark-color);
+            opacity: 0.8;
+        }
+        
+        .card {
+            border-radius: 12px;
+            box-shadow: 0 8px 20px rgba(0, 0, 0, 0.08);
+            margin-bottom: 25px;
+            border: none;
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.12);
+        }
+        
+        .input-card {
+            padding: 30px;
+            background-color: white;
+        }
+        
+        .result-card {
+            padding: 25px;
+            background-color: white;
+            display: none;
+        }
+        
+        .btn-primary {
+            background-color: var(--primary-color);
+            border-color: var(--primary-color);
+            padding: 10px 20px;
+            font-weight: 500;
+            transition: all 0.3s ease;
+        }
+        
+        .btn-primary:hover {
+            background-color: var(--secondary-color);
+            border-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .form-control {
+            border-radius: 8px;
+            padding: 12px 15px;
+            border: 1px solid #e0e0e0;
+        }
+        
+        .form-control:focus {
+            border-color: var(--primary-color);
+            box-shadow: 0 0 0 0.25rem rgba(52, 152, 219, 0.25);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 30px;
+            background-color: white;
+            border-radius: 12px;
+            margin-bottom: 25px;
+        }
+        
+        .loading-spinner {
+            width: 3rem;
+            height: 3rem;
+            color: var(--primary-color);
+        }
+        
+        .speed-result {
+            text-align: center;
+            padding: 30px 0;
+        }
+        
+        .speed-value {
+            font-size: 48px;
+            font-weight: 700;
+            color: var(--primary-color);
+            margin: 15px 0;
+        }
+        
+        .speed-unit {
+            font-size: 20px;
+            color: var(--dark-color);
+            opacity: 0.7;
+        }
+        
+        .speed-status {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-weight: 500;
+            margin-top: 15px;
+        }
+        
+        .speed-good {
+            background-color: rgba(46, 204, 113, 0.2);
+            color: var(--success-color);
+        }
+        
+        .speed-average {
+            background-color: rgba(243, 156, 18, 0.2);
+            color: var(--warning-color);
+        }
+        
+        .speed-slow {
+            background-color: rgba(231, 76, 60, 0.2);
+            color: var(--danger-color);
+        }
+        
+        .history-card {
+            margin-top: 20px;
+        }
+        
+        .history-item {
+            padding: 15px;
+            border-bottom: 1px solid #eee;
+            transition: background-color 0.2s ease;
+        }
+        
+        .history-item:hover {
+            background-color: var(--light-color);
+        }
+        
+        .history-url {
+            font-weight: 500;
+            white-space: nowrap;
+            overflow: hidden;
+            text-overflow: ellipsis;
+        }
+        
+        .history-speed {
+            font-weight: 700;
+            color: var(--primary-color);
+        }
+        
+        .footer {
+            text-align: center;
+            margin-top: 40px;
+            color: var(--dark-color);
+            opacity: 0.7;
+            font-size: 14px;
+        }
+        
+        @media (max-width: 768px) {
+            .main-container {
+                padding: 0 15px;
+            }
+            
+            .input-card, .result-card {
+                padding: 20px;
+            }
+            
+            .header h1 {
+                font-size: 28px;
+            }
+            
+            .speed-value {
+                font-size: 36px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container main-container">
+        <div class="header">
+            <h1>网站测速工具</h1>
+            <p>实时检测网站响应速度，优化您的网站性能（仅测试访问成功后的1~1.5s速度，加载速度越慢，就表示网站访问速度越慢，请各大用户知情！）</p>
+        </div>
+        
+        <div class="card input-card">
+            <div class="mb-3">
+                <label for="urlInput" class="form-label">网站URL</label>
+                <input type="url" class="form-control" id="urlInput" placeholder="请输入要测速的网站URL，例如：https://www.baidu.com/">
+            </div>
+            
+            <div class="d-grid gap-2 mt-3">
+                <button class="btn btn-primary btn-lg" id="testButton">
+                    <i class="bi bi-speedometer2"></i> 开始测速
+                </button>
+            </div>
+        </div>
+        
+        <div class="loading">
+            <div class="spinner-border loading-spinner" role="status">
+                <span class="visually-hidden">加载中...</span>
+            </div>
+            <p class="mt-3">正在测试网站速度，请稍候...</p>
+        </div>
+        
+        <div class="card result-card" id="resultCard">
+            <h5 class="card-title mb-3">测速结果</h5>
+            <div class="speed-result">
+                <div class="speed-value" id="speedValue">0</div>
+                <div class="speed-unit">毫秒</div>
+                <div class="speed-status" id="speedStatus">极快</div>
+            </div>
+            
+            <div class="card history-card">
+                <div class="card-header">
+                    <h6 class="mb-0">测速历史</h6>
+                </div>
+                <div class="card-body p-0">
+                    <div id="historyList">
+                        <!-- 历史记录将通过JavaScript动态生成 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>© 2025 小可乐工具站 | 网站测速工具 | 由 XXAPI 提供技术支持</p>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            // 获取DOM元素
+            const urlInput = document.getElementById('urlInput');
+            const testButton = document.getElementById('testButton');
+            const resultCard = document.getElementById('resultCard');
+            const speedValue = document.getElementById('speedValue');
+            const speedStatus = document.getElementById('speedStatus');
+            const loadingElement = document.querySelector('.loading');
+            const historyList = document.getElementById('historyList');
+            
+            // 测速历史数据
+            let speedHistory = JSON.parse(localStorage.getItem('speedHistory')) || [];
+            
+            // 渲染历史记录
+            renderHistory();
+            
+            // 测速按钮点击事件
+            testButton.addEventListener('click', testSpeed);
+            
+            // 回车键触发测速
+            urlInput.addEventListener('keydown', function(e) {
+                if (e.key === 'Enter') {
+                    testSpeed();
+                }
+            });
+            
+            // 测速函数
+            function testSpeed() {
+                const url = urlInput.value.trim();
+                
+                if (!url) {
+                    alert('请输入要测速的网站URL');
+                    return;
+                }
+                
+                // 验证URL格式
+                try {
+                    new URL(url);
+                } catch (e) {
+                    alert('请输入有效的URL，例如：https://www.baidu.com/');
+                    return;
+                }
+                
+                // 显示加载状态
+                loadingElement.style.display = 'block';
+                resultCard.style.display = 'none';
+                
+                // 调用测速API
+                fetch(`https://v2.xxapi.cn/api/speed?url=${encodeURIComponent(url)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('测速失败');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        loadingElement.style.display = 'none';
+                        
+                        // 显示结果
+                        displayResult(url, data);
+                        
+                        // 添加到历史记录
+                        addToHistory(url, data);
+                    })
+                    .catch(error => {
+                        loadingElement.style.display = 'none';
+                        console.error('Error:', error);
+                        alert('测速失败，请检查URL是否正确或稍后重试');
+                    });
+            }
+            
+            // 显示测速结果
+            function displayResult(url, data) {
+                // 假设API返回的数据结构为 { responseTime: 123 }
+                const responseTime = data.responseTime || 0;
+                
+                speedValue.textContent = responseTime;
+                
+                // 根据响应时间设置状态
+                if (responseTime < 200) {
+                    speedStatus.textContent = '极快';
+                    speedStatus.className = 'speed-status speed-good';
+                } else if (responseTime < 500) {
+                    speedStatus.textContent = '良好';
+                    speedStatus.className = 'speed-status speed-average';
+                } else {
+                    speedStatus.textContent = '较慢';
+                    speedStatus.className = 'speed-status speed-slow';
+                }
+                
+                resultCard.style.display = 'block';
+                
+                // 滚动到结果区域
+                resultCard.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            // 添加到历史记录
+            function addToHistory(url, data) {
+                const timestamp = new Date().toLocaleString();
+                const responseTime = data.responseTime || 0;
+                
+                // 添加到数组开头
+                speedHistory.unshift({
+                    url: url,
+                    time: timestamp,
+                    speed: responseTime
+                });
+                
+                // 限制历史记录数量
+                if (speedHistory.length > 10) {
+                    speedHistory = speedHistory.slice(0, 10);
+                }
+                
+                // 保存到本地存储
+                localStorage.setItem('speedHistory', JSON.stringify(speedHistory));
+                
+                // 重新渲染历史记录
+                renderHistory();
+            }
+            
+            // 渲染历史记录
+            function renderHistory() {
+                historyList.innerHTML = '';
+                
+                if (speedHistory.length === 0) {
+                    historyList.innerHTML = '<div class="text-center py-3 text-muted">暂无测速历史</div>';
+                    return;
+                }
+                
+                speedHistory.forEach(item => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item d-flex justify-content-between align-items-center';
+                    
+                    const urlElement = document.createElement('div');
+                    urlElement.className = 'history-url';
+                    urlElement.textContent = item.url;
+                    urlElement.style.flex = '1';
+                    urlElement.style.minWidth = '0';
+                    urlElement.style.paddingRight = '15px';
+                    
+                    const timeElement = document.createElement('div');
+                    timeElement.className = 'text-muted small';
+                    timeElement.textContent = item.time;
+                    timeElement.style.minWidth = '80px';
+                    timeElement.style.textAlign = 'right';
+                    timeElement.style.marginRight = '15px';
+                    
+                    const speedElement = document.createElement('div');
+                    speedElement.className = 'history-speed';
+                    speedElement.textContent = `${item.speed}ms`;
+                    speedElement.style.minWidth = '70px';
+                    speedElement.style.textAlign = 'right';
+                    
+                    historyItem.appendChild(urlElement);
+                    historyItem.appendChild(timeElement);
+                    historyItem.appendChild(speedElement);
+                    
+                    historyList.appendChild(historyItem);
+                });
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

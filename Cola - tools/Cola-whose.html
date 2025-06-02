@@ -1,0 +1,441 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>域名 Whois 查询 - 小可乐工具站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #4361ee;
+            --secondary-color: #3f37c9;
+            --accent-color: #4895ef;
+            --light-color: #f8f9fa;
+            --dark-color: #212529;
+            --success-color: #4bb543;
+            --error-color: #ff3333;
+            --border-radius: 8px;
+            --box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: #f5f7fa;
+            color: var(--dark-color);
+            line-height: 1.6;
+        }
+        
+        .container {
+            max-width: 1000px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 2rem;
+        }
+        
+        header h1 {
+            font-size: 2.5rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+        }
+        
+        header p {
+            color: #6c757d;
+            font-size: 1.1rem;
+        }
+        
+        .search-box {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            margin-bottom: 2rem;
+        }
+        
+        .search-form {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .input-group {
+            flex: 1;
+            position: relative;
+        }
+        
+        .input-group input {
+            width: 100%;
+            padding: 1rem 1.5rem;
+            border: 2px solid #e9ecef;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-group input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(67, 97, 238, 0.2);
+        }
+        
+        .input-group label {
+            position: absolute;
+            left: 1rem;
+            top: -0.6rem;
+            background: white;
+            padding: 0 0.5rem;
+            font-size: 0.8rem;
+            color: var(--primary-color);
+        }
+        
+        button {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 0 2rem;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        button:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        button:active {
+            transform: translateY(0);
+        }
+        
+        .result-container {
+            background: white;
+            border-radius: var(--border-radius);
+            padding: 2rem;
+            box-shadow: var(--box-shadow);
+            display: none;
+        }
+        
+        .result-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 1.5rem;
+            padding-bottom: 1rem;
+            border-bottom: 1px solid #e9ecef;
+        }
+        
+        .result-header h2 {
+            color: var(--primary-color);
+        }
+        
+        .domain-status {
+            background-color: var(--success-color);
+            color: white;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            font-weight: 500;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 1.5rem;
+        }
+        
+        .info-card {
+            background: #f8f9fa;
+            border-radius: var(--border-radius);
+            padding: 1rem;
+        }
+        
+        .info-card h3 {
+            font-size: 0.9rem;
+            color: #6c757d;
+            margin-bottom: 0.5rem;
+        }
+        
+        .info-card p {
+            font-weight: 500;
+            word-break: break-all;
+        }
+        
+        .dns-servers {
+            grid-column: 1 / -1;
+        }
+        
+        .dns-list {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 0.5rem;
+            margin-top: 0.5rem;
+        }
+        
+        .dns-item {
+            background: #e9ecef;
+            padding: 0.3rem 0.8rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 2rem;
+        }
+        
+        .spinner {
+            width: 50px;
+            height: 50px;
+            border: 5px solid #f3f3f3;
+            border-top: 5px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 1rem;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: var(--error-color);
+            text-align: center;
+            margin-top: 1rem;
+            display: none;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 3rem;
+            color: #6c757d;
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            .container {
+                padding: 1rem;
+            }
+            
+            .search-form {
+                flex-direction: column;
+            }
+            
+            button {
+                padding: 1rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-search"></i> 域名 Whois 查询</h1>
+            <p>快速查询域名的注册信息，支持100余种后缀</p>
+        </header>
+        
+        <div class="search-box">
+            <div class="search-form">
+                <div class="input-group">
+                    <label for="domain">输入域名</label>
+                    <input type="text" id="domain" placeholder="例如: baidu.com">
+                </div>
+                <button id="search-btn">查询</button>
+            </div>
+            <div class="error-message" id="error-message"></div>
+        </div>
+        
+        <div class="loading" id="loading">
+            <div class="spinner"></div>
+            <p>正在查询中，请稍候...</p>
+        </div>
+        
+        <div class="result-container" id="result-container">
+            <div class="result-header">
+                <h2 id="result-domain">baidu.com</h2>
+                <span class="domain-status" id="domain-status">已注册</span>
+            </div>
+            
+            <div class="result-grid">
+                <div class="info-card">
+                    <h3>注册商</h3>
+                    <p id="registrar">-</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>注册人</h3>
+                    <p id="registrant">-</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>注册邮箱</h3>
+                    <p id="registrant-email">-</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>注册时间</h3>
+                    <p id="registration-time">-</p>
+                </div>
+                
+                <div class="info-card">
+                    <h3>到期时间</h3>
+                    <p id="expiration-time">-</p>
+                </div>
+                
+                <div class="info-card dns-servers">
+                    <h3>DNS 服务器</h3>
+                    <div class="dns-list" id="dns-list">
+                        <!-- DNS 服务器将在这里动态添加 -->
+                    </div>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>小可乐工具站 | 数据来自 Whois 查询平台 | 数据每天更新一次</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchBtn = document.getElementById('search-btn');
+            const domainInput = document.getElementById('domain');
+            const resultContainer = document.getElementById('result-container');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('error-message');
+            
+            searchBtn.addEventListener('click', searchWhois);
+            domainInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    searchWhois();
+                }
+            });
+            
+            function searchWhois() {
+                const domain = domainInput.value.trim();
+                
+                if (!domain) {
+                    showError('请输入要查询的域名');
+                    return;
+                }
+                
+                // 简单的域名格式验证
+                if (!/^([a-z0-9]+(-[a-z0-9]+)*\.)+[a-z]{2,}$/i.test(domain)) {
+                    showError('请输入有效的域名格式（如：baidu.com）');
+                    return;
+                }
+                
+                // 显示加载状态
+                loading.style.display = 'block';
+                resultContainer.style.display = 'none';
+                errorMessage.style.display = 'none';
+                
+                // 调用 API
+                fetch(`https://v2.xxapi.cn/api/whois?domain=${domain}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应不正常');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.code === 200) {
+                            displayResults(data.data);
+                        } else {
+                            throw new Error(data.msg || '查询失败');
+                        }
+                    })
+                    .catch(error => {
+                        showError(error.message || '查询过程中出现错误');
+                    })
+                    .finally(() => {
+                        loading.style.display = 'none';
+                    });
+            }
+            
+            function displayResults(data) {
+                // 设置域名标题
+                document.getElementById('result-domain').textContent = data['Domain Name'] || '-';
+                
+                // 设置注册信息
+                document.getElementById('registrar').textContent = data['Sponsoring Registrar'] || '-';
+                document.getElementById('registrant').textContent = data['Registrant'] || '-';
+                document.getElementById('registrant-email').textContent = data['Registrant Contact Email'] || '-';
+                document.getElementById('registration-time').textContent = data['Registration Time'] || '-';
+                document.getElementById('expiration-time').textContent = data['Expiration Time'] || '-';
+                
+                // 设置DNS服务器
+                const dnsList = document.getElementById('dns-list');
+                dnsList.innerHTML = '';
+                
+                if (data['DNS Serve'] && data['DNS Serve'].length > 0) {
+                    data['DNS Serve'].forEach(dns => {
+                        const dnsItem = document.createElement('span');
+                        dnsItem.className = 'dns-item';
+                        dnsItem.textContent = dns;
+                        dnsList.appendChild(dnsItem);
+                    });
+                } else {
+                    const noDns = document.createElement('span');
+                    noDns.textContent = '无DNS记录';
+                    dnsList.appendChild(noDns);
+                }
+                
+                // 设置域名状态
+                const statusElement = document.getElementById('domain-status');
+                if (data['Expiration Time']) {
+                    const expDate = new Date(data['Expiration Time']);
+                    const today = new Date();
+                    if (expDate > today) {
+                        statusElement.textContent = '已注册';
+                        statusElement.style.backgroundColor = 'var(--success-color)';
+                    } else {
+                        statusElement.textContent = '已过期';
+                        statusElement.style.backgroundColor = 'var(--error-color)';
+                    }
+                } else {
+                    statusElement.textContent = '状态未知';
+                    statusElement.style.backgroundColor = '#6c757d';
+                }
+                
+                // 显示结果
+                resultContainer.style.display = 'block';
+            }
+            
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                resultContainer.style.display = 'none';
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

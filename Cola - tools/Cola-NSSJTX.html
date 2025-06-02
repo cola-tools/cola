@@ -1,0 +1,435 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>随机头像生成器 - 小可乐工具站</title>
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --background-color: #f5f7fa;
+            --card-color: #ffffff;
+            --text-color: #333333;
+            --light-text: #777777;
+            --error-color: #e74c3c;
+            --success-color: #2ecc71;
+        }
+        
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+        
+        body {
+            font-family: 'Microsoft YaHei', sans-serif;
+            background-color: var(--background-color);
+            color: var(--text-color);
+            line-height: 1.6;
+            padding: 20px;
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            width: 100%;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+            color: white;
+            border-radius: 8px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2rem;
+        }
+        
+        .description {
+            margin-top: 10px;
+            font-size: 1rem;
+            opacity: 0.9;
+        }
+        
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .control-panel {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-wrap: wrap;
+            gap: 15px;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .btn {
+            padding: 10px 20px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 16px;
+            transition: all 0.3s ease;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn:hover {
+            background-color: var(--secondary-color);
+            transform: translateY(-2px);
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.15);
+        }
+        
+        .btn:active {
+            transform: translateY(0);
+        }
+        
+        .btn i {
+            font-size: 18px;
+        }
+        
+        .result-container {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        
+        .avatar-display {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 30px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 20px;
+            min-height: 300px;
+        }
+        
+        .avatar-img {
+            max-width: 100%;
+            height: auto;
+            max-height: 300px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s ease;
+        }
+        
+        .avatar-img:hover {
+            transform: scale(1.02);
+        }
+        
+        .json-display {
+            background-color: var(--card-color);
+            border-radius: 8px;
+            padding: 20px;
+            box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
+            display: none;
+        }
+        
+        pre {
+            white-space: pre-wrap;
+            word-wrap: break-word;
+            font-family: 'Courier New', Courier, monospace;
+            background-color: #f8f8f8;
+            padding: 15px;
+            border-radius: 4px;
+            overflow-x: auto;
+        }
+        
+        .loading {
+            text-align: center;
+            padding: 20px;
+            display: none;
+        }
+        
+        .spinner {
+            border: 4px solid rgba(0, 0, 0, 0.1);
+            border-radius: 50%;
+            border-top: 4px solid var(--primary-color);
+            width: 40px;
+            height: 40px;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 15px;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error {
+            color: var(--error-color);
+            padding: 15px;
+            background-color: #fadbd8;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+        
+        .success {
+            color: var(--success-color);
+            padding: 15px;
+            background-color: #d5f5e3;
+            border-radius: 6px;
+            margin-top: 20px;
+            display: none;
+            text-align: center;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 30px;
+            padding: 15px;
+            color: var(--light-text);
+            font-size: 0.9rem;
+        }
+        
+        @media (max-width: 768px) {
+            h1 {
+                font-size: 1.5rem;
+            }
+            
+            .description {
+                font-size: 0.9rem;
+            }
+            
+            .control-panel {
+                flex-direction: column;
+                align-items: stretch;
+            }
+            
+            .btn {
+                width: 100%;
+                justify-content: center;
+            }
+            
+            .avatar-img {
+                max-height: 250px;
+            }
+        }
+        
+        /* 动画效果 */
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .fade-in {
+            animation: fadeIn 0.5s ease-out;
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>随机头像生成器</h1>
+            <p class="description">由于API接口不稳定，有时候长时间导致头像获取失败，请求失败等情况，遇到类似情况，退出1~2分钟后，再重新进入页面生成头像</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="control-panel">
+                <button id="generateBtn" class="btn">
+                    <i class="fas fa-sync-alt"></i> 生成随机头像
+                </button>
+                <button id="showJsonBtn" class="btn">
+                    <i class="fas fa-code"></i> 显示JSON数据
+                </button>
+                <button id="downloadBtn" class="btn">
+                    <i class="fas fa-download"></i> 下载头像
+                </button>
+            </div>
+            
+            <div class="success" id="successMessage"></div>
+            <div class="error" id="errorMessage"></div>
+            
+            <div class="loading" id="loadingIndicator">
+                <div class="spinner"></div>
+                <p>正在生成头像，请稍候...</p>
+            </div>
+            
+            <div class="result-container">
+                <div class="avatar-display">
+                    <img id="avatarImage" class="avatar-img" src="https://api.vvhan.com/api/avatar/boy" alt="随机头像">
+                    <p id="avatarInfo">点击上方按钮生成新的随机头像</p>
+                </div>
+                
+                <div class="json-display" id="jsonDisplay">
+                    <h3>JSON数据</h3>
+                    <pre id="jsonData"></pre>
+                </div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>数据来源: VVHAN API | © 2025 小可乐工具站 | 随机头像生成器</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const generateBtn = document.getElementById('generateBtn');
+            const showJsonBtn = document.getElementById('showJsonBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const avatarImage = document.getElementById('avatarImage');
+            const avatarInfo = document.getElementById('avatarInfo');
+            const jsonDisplay = document.getElementById('jsonDisplay');
+            const jsonData = document.getElementById('jsonData');
+            const loadingIndicator = document.getElementById('loadingIndicator');
+            const errorMessage = document.getElementById('errorMessage');
+            const successMessage = document.getElementById('successMessage');
+            
+            let currentAvatarUrl = avatarImage.src;
+            let currentJsonData = null;
+            
+            // 生成随机头像
+            generateBtn.addEventListener('click', function() {
+                fetchRandomAvatar();
+            });
+            
+            // 显示JSON数据
+            showJsonBtn.addEventListener('click', function() {
+                if (jsonDisplay.style.display === 'block') {
+                    jsonDisplay.style.display = 'none';
+                    showJsonBtn.innerHTML = '<i class="fas fa-code"></i> 显示JSON数据';
+                } else {
+                    if (currentJsonData) {
+                        jsonData.textContent = JSON.stringify(currentJsonData, null, 2);
+                        jsonDisplay.style.display = 'block';
+                        showJsonBtn.innerHTML = '<i class="fas fa-eye-slash"></i> 隐藏JSON数据';
+                    } else {
+                        fetchRandomAvatar(true);
+                    }
+                }
+            });
+            
+            // 下载头像
+            downloadBtn.addEventListener('click', function() {
+                if (!currentAvatarUrl) return;
+                
+                const link = document.createElement('a');
+                link.href = currentAvatarUrl;
+                link.download = `random-avatar-${Date.now()}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                showSuccess('头像下载成功！');
+            });
+            
+            // 获取随机头像
+            function fetchRandomAvatar(showJson = false) {
+                loadingIndicator.style.display = 'block';
+                errorMessage.style.display = 'none';
+                successMessage.style.display = 'none';
+                jsonDisplay.style.display = 'none';
+                showJsonBtn.innerHTML = '<i class="fas fa-code"></i> 显示JSON数据';
+                
+                // 同时获取图片和JSON数据
+                Promise.all([
+                    fetch('https://api.vvhan.com/api/avatar/boy'),
+                    fetch('https://api.vvhan.com/api/avatar/boy?type=json')
+                ])
+                .then(responses => {
+                    return Promise.all(responses.map(res => {
+                        if (!res.ok) throw new Error('网络响应不正常');
+                        return res.url.includes('type=json') ? res.json() : res.blob();
+                    }));
+                })
+                .then(data => {
+                    const [imageBlob, jsonData] = data;
+                    
+                    // 更新头像图片
+                    const imageUrl = URL.createObjectURL(imageBlob);
+                    avatarImage.src = imageUrl;
+                    avatarImage.classList.add('fade-in');
+                    setTimeout(() => avatarImage.classList.remove('fade-in'), 500);
+                    
+                    // 保存当前数据
+                    currentAvatarUrl = imageUrl;
+                    currentJsonData = jsonData;
+                    
+                    // 更新信息
+                    avatarInfo.textContent = '新头像生成成功！';
+                    
+                    loadingIndicator.style.display = 'none';
+                    showSuccess('头像生成成功！');
+                    
+                    if (showJson) {
+                        jsonData.textContent = JSON.stringify(currentJsonData, null, 2);
+                        jsonDisplay.style.display = 'block';
+                        showJsonBtn.innerHTML = '<i class="fas fa-eye-slash"></i> 隐藏JSON数据';
+                    }
+                })
+                .catch(error => {
+                    loadingIndicator.style.display = 'none';
+                    showError('请求失败: ' + error.message);
+                    console.error('API请求错误:', error);
+                });
+            }
+            
+            // 显示错误信息
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.style.display = 'block';
+                setTimeout(() => {
+                    errorMessage.style.display = 'none';
+                }, 5000);
+            }
+            
+            // 显示成功信息
+            function showSuccess(message) {
+                successMessage.textContent = message;
+                successMessage.style.display = 'block';
+                setTimeout(() => {
+                    successMessage.style.display = 'none';
+                }, 3000);
+            }
+            
+            // 初始加载
+            fetchRandomAvatar();
+        });
+    </script>
+</body>
+</html>
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

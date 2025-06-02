@@ -1,0 +1,457 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI智能搜索 - 小可乐工具站</title>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" rel="stylesheet">
+    <style>
+        :root {
+            --primary-color: #4a6bdf;
+            --secondary-color: #6c757d;
+            --light-color: #f8f9fa;
+            --dark-color: #343a40;
+            --success-color: #28a745;
+            --link-color: #4a6bff; /* 新增：链接默认颜色 */
+            --link-hover-color: #4a6bff; /* 新增：链接悬停颜色 */
+            --link-visited-color: #4a6bff; /* 新增：已访问链接颜色 */
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f5f7fa;
+            margin: 0;
+            padding: 0;
+        }
+        
+        /* 全局链接样式 - 去除下划线并自定义颜色 */
+        a {
+            text-decoration: none;
+            color: var(--link-color);
+            transition: color 0.2s ease;
+        }
+        
+        a:hover {
+            color: var(--link-hover-color);
+            text-decoration: none; /* 确保悬停时也没有下划线 */
+        }
+        
+        a:visited {
+            color: var(--link-visited-color);
+        }
+        
+        /* 特定链接样式覆盖 */
+        .source-title a {
+            color: var(--dark-color); /* 保持标题链接为深色 */
+        }
+        
+        .source-title a:hover {
+            color: var(--primary-color); /* 标题链接悬停颜色 */
+        }
+        
+        .source-link {
+            color: var(--link-color); /* 使用自定义链接颜色 */
+        }
+        
+        .source-link:hover {
+            color: var(--link-hover-color); /* 使用自定义悬停颜色 */
+        }
+        
+        footer a {
+            color: var(--secondary-color); /* 页脚链接颜色 */
+        }
+        
+        footer a:hover {
+            color: var(--primary-color); /* 页脚链接悬停颜色 */
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+            background: linear-gradient(135deg, var(--primary-color), #6a11cb);
+            color: white;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        h1 {
+            margin: 0;
+            font-size: 2.5rem;
+        }
+        
+        .search-box {
+            display: flex;
+            margin: 20px auto;
+            max-width: 800px;
+        }
+        
+        #search-input {
+            flex: 1;
+            padding: 15px;
+            border: 2px solid #ddd;
+            border-radius: 30px 0 0 30px;
+            font-size: 1.1rem;
+            outline: none;
+            transition: border-color 0.3s;
+        }
+        
+        #search-input:focus {
+            border-color: var(--primary-color);
+        }
+        
+        #search-button {
+            padding: 0 25px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 0 30px 30px 0;
+            cursor: pointer;
+            font-size: 1.1rem;
+            transition: background-color 0.3s;
+        }
+        
+        #search-button:hover {
+            background-color: #4a6bff;
+        }
+        
+        .loading {
+            text-align: center;
+            margin: 30px 0;
+            display: none;
+        }
+        
+        .loading i {
+            font-size: 2rem;
+            color: var(--primary-color);
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .results-container {
+            display: none;
+            margin-top: 30px;
+        }
+        
+        .summary-card {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .summary-title {
+            color: var(--primary-color);
+            margin-top: 0;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 10px;
+        }
+        
+        .summary-content {
+            line-height: 1.8;
+            font-size: 1.05rem;
+        }
+        
+        .related-questions {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            margin-bottom: 30px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .related-title {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .questions-list {
+            list-style-type: none;
+            padding: 0;
+        }
+        
+        .questions-list li {
+            padding: 10px 0;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .questions-list li:last-child {
+            border-bottom: none;
+        }
+        
+        .questions-list li:hover {
+            color: var(--primary-color);
+            cursor: pointer;
+        }
+        
+        .sources-container {
+            background-color: white;
+            border-radius: 10px;
+            padding: 25px;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .sources-title {
+            color: var(--primary-color);
+            margin-top: 0;
+        }
+        
+        .source-item {
+            margin-bottom: 20px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .source-item:last-child {
+            border-bottom: none;
+            margin-bottom: 0;
+            padding-bottom: 0;
+        }
+        
+        .source-title {
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+        
+        .source-title a {
+            transition: color 0.3s;
+        }
+        
+        .source-snippet {
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+        
+        .source-link {
+            display: inline-block;
+            margin-top: 5px;
+            font-size: 0.8rem;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: 50px;
+            padding: 20px;
+            color: var(--secondary-color);
+            font-size: 0.9rem;
+        }
+        
+        .error-message {
+            color: #dc3545;
+            text-align: center;
+            margin: 20px 0;
+            display: none;
+        }
+        
+        @media (max-width: 768px) {
+            .search-box {
+                flex-direction: column;
+            }
+            
+            #search-input {
+                border-radius: 30px;
+                margin-bottom: 10px;
+            }
+            
+            #search-button {
+                border-radius: 30px;
+                padding: 15px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-robot"></i> AI智能搜索助手</h1>
+            <p>输入关键词，获取AI整合的最新信息</p>
+        </header>
+        
+        <div class="search-box">
+            <input type="text" id="search-input" placeholder="请输入您想搜索的关键词，例如：鸿蒙PC系统什么时候上市">
+            <button id="search-button"><i class="fas fa-search"></i> 搜索</button>
+        </div>
+        
+        <div class="loading">
+            <i class="fas fa-spinner"></i>
+            <p>正在搜索中，请不要关闭页面...</p>
+        </div>
+        
+        <div class="error-message">
+            <i class="fas fa-exclamation-triangle"></i>
+            <p id="error-text"></p>
+        </div>
+        
+        <div class="results-container" id="results-container">
+            <div class="summary-card" id="summary-card">
+                <h2 class="summary-title"><i class="fas fa-file-alt"></i> AI整合摘要</h2>
+                <div class="summary-content" id="summary-content"></div>
+            </div>
+            
+            <div class="related-questions" id="related-questions">
+                <h2 class="related-title"><i class="fas fa-question-circle"></i> 相关问题</h2>
+                <ul class="questions-list" id="questions-list"></ul>
+            </div>
+            
+            <div class="sources-container" id="sources-container">
+                <h2 class="sources-title"><i class="fas fa-link"></i> 信息来源</h2>
+                <div id="sources-list"></div>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 AI智能搜索助手 | 版权归 <a href="https://colatools.cn/" target="_blank">Cola Tools</a> 所有</p>
+        </footer>
+    </div>
+    
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const searchInput = document.getElementById('search-input');
+            const searchButton = document.getElementById('search-button');
+            const loading = document.querySelector('.loading');
+            const errorMessage = document.querySelector('.error-message');
+            const errorText = document.getElementById('error-text');
+            const resultsContainer = document.getElementById('results-container');
+            const summaryContent = document.getElementById('summary-content');
+            const questionsList = document.getElementById('questions-list');
+            const sourcesList = document.getElementById('sources-list');
+            
+            // 搜索按钮点击事件
+            searchButton.addEventListener('click', performSearch);
+            
+            // 回车键触发搜索
+            searchInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    performSearch();
+                }
+            });
+            
+            // 相关问题点击事件
+            questionsList.addEventListener('click', function(e) {
+                if (e.target.tagName === 'LI') {
+                    searchInput.value = e.target.textContent;
+                    performSearch();
+                }
+            });
+            
+            function performSearch() {
+                const keyword = searchInput.value.trim();
+                
+                if (!keyword) {
+                    showError('请输入搜索关键词');
+                    return;
+                }
+                
+                // 显示加载中，隐藏其他内容
+                loading.style.display = 'block';
+                errorMessage.style.display = 'none';
+                resultsContainer.style.display = 'none';
+                
+                // 调用API
+                fetch(`https://api.pearktrue.cn/api/aisearch/?keyword=${encodeURIComponent(keyword)}`)
+                    .then(response => {
+                        if (!response.ok) {
+                            throw new Error('网络响应不正常');
+                        }
+                        return response.json();
+                    })
+                    .then(data => {
+                        if (data.code !== 200) {
+                            throw new Error(data.msg || '搜索失败');
+                        }
+                        
+                        // 显示结果
+                        displayResults(data);
+                    })
+                    .catch(error => {
+                        showError(error.message || '发生错误，请稍后再试');
+                    })
+                    .finally(() => {
+                        loading.style.display = 'none';
+                    });
+            }
+            
+            function displayResults(data) {
+                // 显示摘要
+                summaryContent.innerHTML = data.data.text.replace(/\n/g, '<br>');
+                
+                // 显示相关问题
+                questionsList.innerHTML = '';
+                data.data.related_questions.forEach(question => {
+                    const li = document.createElement('li');
+                    li.textContent = question;
+                    questionsList.appendChild(li);
+                });
+                
+                // 显示信息来源
+                sourcesList.innerHTML = '';
+                data.data.sources.forEach(source => {
+                    const sourceItem = document.createElement('div');
+                    sourceItem.className = 'source-item';
+                    
+                    const title = document.createElement('div');
+                    title.className = 'source-title';
+                    const titleLink = document.createElement('a');
+                    titleLink.href = source.link;
+                    titleLink.textContent = source.title;
+                    titleLink.target = '_blank';
+                    title.appendChild(titleLink);
+                    
+                    const snippet = document.createElement('div');
+                    snippet.className = 'source-snippet';
+                    snippet.textContent = source.snippet;
+                    
+                    const link = document.createElement('a');
+                    link.className = 'source-link';
+                    link.href = source.link;
+                    link.textContent = '查看原文';
+                    link.target = '_blank';
+                    
+                    sourceItem.appendChild(title);
+                    sourceItem.appendChild(snippet);
+                    sourceItem.appendChild(link);
+                    
+                    sourcesList.appendChild(sourceItem);
+                });
+                
+                // 显示结果容器
+                resultsContainer.style.display = 'block';
+                
+                // 滚动到结果区域
+                resultsContainer.scrollIntoView({ behavior: 'smooth' });
+            }
+            
+            function showError(message) {
+                errorText.textContent = message;
+                errorMessage.style.display = 'block';
+            }
+        });
+    </script>
+</body>
+</html>
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

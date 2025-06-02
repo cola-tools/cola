@@ -1,0 +1,497 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>图像内容审核工具 - 小可乐工具站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #ff4757;
+            --secondary-color: #ff6b81;
+            --accent-color: #ff8d8d;
+            --light-color: #fff5f5;
+            --dark-color: #2f3542;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 20px rgba(255, 71, 87, 0.15);
+            --border-radius: 12px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 800px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            opacity: 0.8;
+        }
+        
+        .upload-box {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 30px;
+            margin-bottom: 20px;
+            text-align: center;
+            border: 2px dashed #ddd;
+            transition: var(--transition);
+            cursor: pointer;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-box:hover {
+            border-color: var(--primary-color);
+        }
+        
+        .upload-box.drag-over {
+            background: rgba(255, 71, 87, 0.05);
+            border-color: var(--primary-color);
+        }
+        
+        .upload-icon {
+            font-size: 3rem;
+            color: var(--primary-color);
+            margin-bottom: 15px;
+        }
+        
+        .upload-text {
+            margin-bottom: 15px;
+        }
+        
+        .upload-input {
+            position: absolute;
+            width: 100%;
+            height: 100%;
+            top: 0;
+            left: 0;
+            opacity: 0;
+            cursor: pointer;
+        }
+        
+        .image-preview {
+            width: 100%;
+            max-height: 400px;
+            object-fit: contain;
+            border-radius: var(--border-radius);
+            margin-bottom: 20px;
+            display: none;
+        }
+        
+        .result-container {
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            padding: 20px;
+            display: none;
+        }
+        
+        .result-container.show {
+            display: block;
+            animation: fadeIn 0.5s;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .result-title {
+            font-size: 1.2rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .result-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            gap: 15px;
+            margin-top: 15px;
+        }
+        
+        .result-item {
+            background: #f8f9fa;
+            padding: 12px;
+            border-radius: var(--border-radius);
+        }
+        
+        .result-label {
+            font-size: 12px;
+            color: #666;
+            margin-bottom: 5px;
+        }
+        
+        .result-value {
+            font-size: 16px;
+            font-weight: 500;
+        }
+        
+        .result-bar {
+            height: 8px;
+            background: #e9ecef;
+            border-radius: 4px;
+            margin-top: 5px;
+            overflow: hidden;
+        }
+        
+        .result-progress {
+            height: 100%;
+            background: var(--primary-color);
+            border-radius: 4px;
+            transition: width 0.5s ease;
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(255, 71, 87, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #f44336;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        .verdict {
+            padding: 10px;
+            border-radius: var(--border-radius);
+            text-align: center;
+            font-weight: 500;
+            margin-top: 15px;
+            display: none;
+        }
+        
+        .verdict.pass {
+            background: #e3f9e5;
+            color: #2e7d32;
+        }
+        
+        .verdict.check {
+            background: #fff8e1;
+            color: #ff8f00;
+        }
+        
+        .verdict.forbid {
+            background: #ffebee;
+            color: #c62828;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 20px 0;
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 600px) {
+            .result-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>图像内容审核工具</h1>
+            <p class="subtitle">基于AI的图像内容安全检测</p>
+        </header>
+        
+        <div class="upload-box" id="uploadBox">
+            <div class="upload-icon">
+                <i class="fas fa-cloud-upload-alt"></i>
+            </div>
+            <div class="upload-text">
+                <p>点击或拖拽图片到此处上传</p>
+                <p>支持JPG、PNG格式，大小不超过5MB</p>
+            </div>
+            <input type="file" id="fileInput" class="upload-input" accept="image/jpeg,image/png">
+        </div>
+        
+        <img id="imagePreview" class="image-preview" alt="预览图">
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>正在分析图片，请稍候...</p>
+        </div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        
+        <div id="resultContainer" class="result-container">
+            <h3 class="result-title">
+                <i class="fas fa-chart-bar"></i>
+                内容分析结果
+            </h3>
+            
+            <div class="result-grid">
+                <div class="result-item">
+                    <div class="result-label">绘画(Drawing)</div>
+                    <div id="drawingValue" class="result-value">0%</div>
+                    <div class="result-bar">
+                        <div id="drawingBar" class="result-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">变态(Hentai)</div>
+                    <div id="hentaiValue" class="result-value">0%</div>
+                    <div class="result-bar">
+                        <div id="hentaiBar" class="result-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">中立(Neutral)</div>
+                    <div id="neutralValue" class="result-value">0%</div>
+                    <div class="result-bar">
+                        <div id="neutralBar" class="result-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">色情(Porn)</div>
+                    <div id="pornValue" class="result-value">0%</div>
+                    <div class="result-bar">
+                        <div id="pornBar" class="result-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+                <div class="result-item">
+                    <div class="result-label">性感(Sexy)</div>
+                    <div id="sexyValue" class="result-value">0%</div>
+                    <div class="result-bar">
+                        <div id="sexyBar" class="result-progress" style="width: 0%"></div>
+                    </div>
+                </div>
+            </div>
+            
+            <div id="verdict" class="verdict">
+                <i class="fas fa-check-circle"></i>
+                <span id="verdictText">建议放行</span>
+            </div>
+        </div>
+        
+        <footer>
+            <p>© 2025 小可乐工具站 | 图像内容审核工具 | 基于开源NSFW模型</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const uploadBox = document.getElementById('uploadBox');
+            const fileInput = document.getElementById('fileInput');
+            const imagePreview = document.getElementById('imagePreview');
+            const resultContainer = document.getElementById('resultContainer');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            const verdict = document.getElementById('verdict');
+            
+            // 拖拽上传功能
+            uploadBox.addEventListener('dragover', function(e) {
+                e.preventDefault();
+                uploadBox.classList.add('drag-over');
+            });
+            
+            uploadBox.addEventListener('dragleave', function() {
+                uploadBox.classList.remove('drag-over');
+            });
+            
+            uploadBox.addEventListener('drop', function(e) {
+                e.preventDefault();
+                uploadBox.classList.remove('drag-over');
+                
+                if (e.dataTransfer.files.length) {
+                    fileInput.files = e.dataTransfer.files;
+                    handleFileUpload(fileInput.files[0]);
+                }
+            });
+            
+            // 点击上传功能
+            fileInput.addEventListener('change', function() {
+                if (fileInput.files.length) {
+                    handleFileUpload(fileInput.files[0]);
+                }
+            });
+            
+            // 处理文件上传
+            function handleFileUpload(file) {
+                // 验证文件类型
+                if (!file.type.match('image/jpeg') && !file.type.match('image/png')) {
+                    showError('只支持JPG和PNG格式的图片');
+                    return;
+                }
+                
+                // 验证文件大小
+                if (file.size > 5 * 1024 * 1024) {
+                    showError('图片大小不能超过5MB');
+                    return;
+                }
+                
+                // 显示预览图
+                const reader = new FileReader();
+                reader.onload = function(e) {
+                    imagePreview.src = e.target.result;
+                    imagePreview.style.display = 'block';
+                };
+                reader.readAsDataURL(file);
+                
+                // 分析图片内容
+                analyzeImage(file);
+            }
+            
+            // 分析图片内容
+            function analyzeImage(file) {
+                loading.classList.add('show');
+                resultContainer.classList.remove('show');
+                errorMessage.classList.remove('show');
+                verdict.style.display = 'none';
+                
+                // 模拟API调用（实际项目中替换为真实API调用）
+                setTimeout(() => {
+                    try {
+                        // 这里模拟API响应
+                        const response = {
+                            success: true,
+                            results: [
+                                { className: "Drawing", probability: Math.random() * 0.2 },
+                                { className: "Hentai", probability: Math.random() * 0.3 },
+                                { className: "Neutral", probability: Math.random() * 0.4 },
+                                { className: "Porn", probability: Math.random() * 0.5 },
+                                { className: "Sexy", probability: Math.random() * 0.3 }
+                            ]
+                        };
+                        
+                        // 确保概率总和为1
+                        const total = response.results.reduce((sum, item) => sum + item.probability, 0);
+                        response.results.forEach(item => {
+                            item.probability = item.probability / total;
+                        });
+                        
+                        displayResults(response);
+                    } catch (error) {
+                        showError('分析失败，请稍后再试！');
+                    } finally {
+                        loading.classList.remove('show');
+                    }
+                }, 1500);
+            }
+            
+            // 显示分析结果
+            function displayResults(data) {
+                if (!data.success) {
+                    showError('无法分析图片内容！');
+                    return;
+                }
+                
+                // 更新每个类别的显示
+                data.results.forEach(item => {
+                    const percentage = Math.round(item.probability * 100);
+                    document.getElementById(`${item.className.toLowerCase()}Value`).textContent = `${percentage}%`;
+                    document.getElementById(`${item.className.toLowerCase()}Bar`).style.width = `${percentage}%`;
+                });
+                
+                // 根据结果给出建议
+                const pornScore = data.results.find(item => item.className === "Porn").probability;
+                const sexyScore = data.results.find(item => item.className === "Sexy").probability;
+                
+                if (pornScore >= 0.6) {
+                    verdict.className = "verdict forbid";
+                    verdict.innerHTML = '<i class="fas fa-ban"></i> <span id="verdictText">建议封禁 (色情内容)</span>';
+                } else if (pornScore >= 0.3 || sexyScore >= 0.5) {
+                    verdict.className = "verdict check";
+                    verdict.innerHTML = '<i class="fas fa-eye"></i> <span id="verdictText">建议人工审核</span>';
+                } else {
+                    verdict.className = "verdict pass";
+                    verdict.innerHTML = '<i class="fas fa-check-circle"></i> <span id="verdictText">建议放行</span>';
+                }
+                
+                verdict.style.display = 'block';
+                resultContainer.classList.add('show');
+                errorMessage.classList.remove('show');
+            }
+            
+            // 显示错误信息
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+                resultContainer.classList.remove('show');
+                loading.classList.remove('show');
+            }
+        });
+    </script>
+</body>
+</html>
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

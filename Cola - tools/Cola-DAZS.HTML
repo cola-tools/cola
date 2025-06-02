@@ -1,0 +1,182 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>答案之书 - 小可乐工具站</title>
+    <style>
+        :root {
+            --primary-color: #8e44ad;
+            --secondary-color: #9b59b6;
+            --bg-color: #f5eef8;
+            --text-color: #2c3e50;
+        }
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background: var(--bg-color);
+            color: var(--text-color);
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 20px;
+            text-align: center;
+        }
+        .book-container {
+            background: white;
+            border-radius: 10px;
+            padding: 30px;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.1);
+            margin: 30px 0;
+            min-height: 300px;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+        h1 {
+            color: var(--primary-color);
+        }
+        button {
+            background: var(--primary-color);
+            color: white;
+            border: none;
+            padding: 12px 25px;
+            font-size: 16px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.3s;
+        }
+        button:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        .answer {
+            font-size: 18px;
+            line-height: 1.6;
+            margin: 20px 0;
+            padding: 20px;
+            background: #f9f4ff;
+            border-radius: 8px;
+            border-left: 4px solid var(--primary-color);
+        }
+        .instructions {
+            color: #666;
+            margin-bottom: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h1>小可乐——答案之书</h1>
+    <p class="instructions">在心中默念你的问题，然后点击按钮获取小可乐的指引</p>
+    
+    <button id="getAnswerBtn">获取答案</button>
+    
+    <div class="book-container">
+        <div id="answerDisplay" class="answer">
+            小可乐会将答案放在这里...
+        </div>
+    </div>
+
+    <script>
+        // 答案库
+        const answers = [
+            "跟随你内心的声音",
+            "时机尚未成熟",
+            "毫无疑问",
+            "结果可能会让你惊喜",
+            "不妨再等等",
+            "放手去做吧",
+            "保持耐心",
+            "换个角度思考",
+            "答案就在你身边",
+            "相信你的直觉",
+            "风险与机遇并存",
+            "不妨大胆一些",
+            "谨慎行事",
+            "一切自有安排",
+            "顺其自然",
+            "答案是否定的",
+            "这是个好兆头",
+            "需要更多努力",
+            "结果会如你所愿",
+            "三思而后行",
+            "善用过去的经验，它是宝贵的财富",
+            "得不到别人的认同",
+            "别太赶了",
+            "别想了",
+            "不要抱期望",
+            "要求不要太高",
+            "这是必然的，不要抗拒",
+            "不要浪费精力",
+            "不要浪费你的时间了",
+            "不要做得过火了",
+            "不用担心",
+            "车到山前必有路",
+            "答案就在你身边",
+            "大胆一点",
+            "大方一点",
+            "放轻松点，慢慢来",
+            "管它呢",
+            "毫无疑问",
+            "好运将会降临",
+            "忽略了一件显而易见的事",
+            "换个角度想想",
+            "会付出代价",
+            "会感到庆幸",
+            "会很不顺利",
+            "会后悔的",
+            "会失去自我",
+            "继续前进",
+            "结果可能让人惊讶",
+            "肯定的",
+            "没错",
+            "你必须解决一些相关的问题",
+            "得真正地努力一下",
+            "还有别的选择",
+            "你心里已经有答案了",
+            "你说了算",
+            "你在开玩笑吗？",
+            "你做什么都没用",
+            "千万不能失败",
+            "奇迹即将降临",
+            "认清现实吧",
+            "问问自己，为什么要这么干",
+            "现在还说不清",
+            "相信你的直觉",
+            "这取决于你的行动"
+        ];
+        
+        // 获取随机答案
+        function getRandomAnswer() {
+            const randomIndex = Math.floor(Math.random() * answers.length);
+            return answers[randomIndex];
+        }
+        
+        // 点击事件
+        document.getElementById('getAnswerBtn').addEventListener('click', function() {
+            const answerDisplay = document.getElementById('answerDisplay');
+            
+            // 显示加载效果
+            answerDisplay.textContent = "小可乐正在思考...";
+            
+            // 模拟思考过程
+            setTimeout(() => {
+                const answer = getRandomAnswer();
+                answerDisplay.textContent = answer;
+            }, 1000); // 0.8秒延迟模拟思考过程
+        });
+    </script>
+</body>
+</html>
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

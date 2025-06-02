@@ -1,0 +1,627 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>小可乐智能机器人 - 小可乐工具站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600&display=swap" rel="stylesheet">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #6c5ce7;
+            --secondary-color: #5649c0;
+            --bot-color: #6c5ce7;
+            --user-color: #00b894;
+            --light-color: #f8f9fa;
+            --dark-color: #2d3436;
+            --bg-color: #f5f6fa;
+            --chat-bg: #ffffff;
+            --border-radius: 12px;
+            --box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Poppins', sans-serif;
+            background-color: var(--bg-color);
+            color: var(--dark-color);
+            line-height: 1.6;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 1rem;
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            height: 100%;
+            position: relative;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 1.5rem;
+            padding: 1rem 0;
+        }
+        
+        header h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 0.5rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 0.5rem;
+        }
+        
+        header p {
+            color: #636e72;
+            font-size: 0.9rem;
+        }
+        
+        .chat-container {
+            background: var(--chat-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            position: relative;
+        }
+        
+        .chat-messages {
+            flex: 1;
+            padding: 1.5rem;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+        }
+        
+        .message {
+            max-width: 80%;
+            padding: 0.8rem 1.2rem;
+            border-radius: var(--border-radius);
+            position: relative;
+            animation: fadeIn 0.3s ease;
+        }
+        
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+        
+        .bot-message {
+            align-self: flex-start;
+            background-color: rgba(108, 92, 231, 0.1);
+            border-bottom-left-radius: 4px;
+            color: var(--dark-color);
+            font-family: 'Courier New', monospace;
+        }
+        
+        .user-message {
+            align-self: flex-end;
+            background-color: var(--user-color);
+            color: white;
+            border-bottom-right-radius: 4px;
+        }
+        
+        .message-time {
+            font-size: 0.7rem;
+            opacity: 0.7;
+            margin-top: 0.3rem;
+            text-align: right;
+        }
+        
+        .input-area {
+            padding: 1rem;
+            border-top: 1px solid #dfe6e9;
+            display: flex;
+            gap: 0.5rem;
+            background: white;
+            position: relative;
+        }
+        
+        .input-area input {
+            flex: 1;
+            padding: 0.8rem 1rem;
+            border: 1px solid #dfe6e9;
+            border-radius: var(--border-radius);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .input-area input:focus {
+            border-color: var(--primary-color);
+            outline: none;
+            box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+        }
+        
+        .send-btn {
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            width: 50px;
+            border-radius: var(--border-radius);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .send-btn:hover {
+            background-color: var(--secondary-color);
+        }
+        
+        .send-btn:disabled {
+            background-color: #b2bec3;
+            cursor: not-allowed;
+        }
+        
+        .typing-indicator {
+            display: flex;
+            align-items: center;
+            gap: 0.3rem;
+            padding: 0.8rem 1.2rem;
+            background-color: rgba(108, 92, 231, 0.1);
+            border-radius: var(--border-radius);
+            align-self: flex-start;
+            margin-bottom: 0.5rem;
+        }
+        
+        .typing-dot {
+            width: 8px;
+            height: 8px;
+            background-color: var(--bot-color);
+            border-radius: 50%;
+            animation: typingAnimation 1.4s infinite ease-in-out;
+        }
+        
+        .typing-dot:nth-child(1) {
+            animation-delay: 0s;
+        }
+        
+        .typing-dot:nth-child(2) {
+            animation-delay: 0.2s;
+        }
+        
+        .typing-dot:nth-child(3) {
+            animation-delay: 0.4s;
+        }
+        
+        @keyframes typingAnimation {
+            0%, 60%, 100% { transform: translateY(0); }
+            30% { transform: translateY(-5px); }
+        }
+        
+        .welcome-message {
+            text-align: center;
+            margin: auto;
+            color: #636e72;
+            padding: 2rem;
+        }
+        
+        /* 快捷问题样式 */
+        .quick-questions {
+            display: flex;
+            overflow-x: hidden;
+            gap: 0.5rem;
+            padding: 1rem;
+            background: white;
+            margin-top: auto;
+            scrollbar-width: none;
+            position: relative;
+        }
+        
+        .quick-questions:hover {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+        
+        .quick-questions::-webkit-scrollbar {
+            display: none;
+        }
+        
+        .quick-question {
+            background-color: rgba(108, 92, 231, 0.1);
+            color: var(--primary-color);
+            border: none;
+            padding: 0.5rem 1rem;
+            border-radius: 20px;
+            font-size: 0.8rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+        
+        .quick-question:hover {
+            background-color: rgba(108, 92, 231, 0.2);
+        }
+        
+        footer {
+            text-align: center;
+            padding: 1rem;
+            color: #636e72;
+            font-size: 0.8rem;
+        }
+        
+        /* 左侧功能按钮样式 */
+        .side-menu {
+            position: absolute;
+            left: -40px;
+            top: 50%;
+            transform: translateY(-50%);
+            display: flex;
+            flex-direction: column;
+            gap: 10px;
+        }
+        
+        .menu-btn {
+            width: 40px;
+            height: 40px;
+            background-color: var(--primary-color);
+            color: white;
+            border: none;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            box-shadow: var(--box-shadow);
+        }
+        
+        .menu-btn:hover {
+            background-color: var(--secondary-color);
+            transform: scale(1.1);
+        }
+        
+        .menu-options {
+            position: absolute;
+            left: 50px;
+            top: 0;
+            background: white;
+            border-radius: var(--border-radius);
+            box-shadow: var(--box-shadow);
+            padding: 0.5rem;
+            display: none;
+            flex-direction: column;
+            gap: 0.5rem;
+            min-width: 120px;
+            z-index: 10;
+        }
+        
+        .menu-options.show {
+            display: flex;
+        }
+        
+        .menu-option {
+            padding: 0.5rem 1rem;
+            border-radius: 6px;
+            background-color: rgba(108, 92, 231, 0.1);
+            color: var(--primary-color);
+            border: none;
+            cursor: pointer;
+            text-align: left;
+            transition: all 0.3s ease;
+        }
+        
+        .menu-option:hover {
+            background-color: rgba(108, 92, 231, 0.2);
+        }
+        
+        @media (max-width: 600px) {
+            .message {
+                max-width: 95%;
+            }
+            
+            header h1 {
+                font-size: 1.5rem;
+            }
+            
+            .quick-questions {
+                padding: 0.5rem;
+                overflow-x: auto;
+                -webkit-overflow-scrolling: touch;
+            }
+            
+            .quick-question {
+                padding: 0.4rem 0.8rem;
+                font-size: 0.7rem;
+            }
+            
+            .side-menu {
+                left: -35px;
+            }
+            
+            .menu-btn {
+                width: 35px;
+                height: 35px;
+                font-size: 0.8rem;
+            }
+            
+            .input-area {
+                padding: 0.8rem;
+            }
+            
+            .input-area input {
+                padding: 0.6rem 0.8rem;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1><i class="fas fa-robot"></i> 小可乐工具站智能机器人</h1>
+            <p>基于可乐工具站的智能系统</p>
+        </header>
+        
+        <div class="chat-container">
+            <div class="chat-messages" id="chat-messages">
+                <div class="welcome-message">
+                   
+                </div>
+            </div>
+            
+            <div class="quick-questions" id="quick-questions">
+                <!-- 快捷问题按钮将通过JavaScript动态生成 -->
+            </div>
+            
+            <div class="input-area">
+                <input type="text" id="user-input" placeholder="输入消息..." autocomplete="off">
+                <button class="send-btn" id="send-btn" disabled>
+                    <i class="fas fa-paper-plane"></i>
+                </button>
+            </div>
+            
+            <div class="side-menu">
+                <button class="menu-btn" id="menu-btn">
+                    <i class="fas fa-plus"></i>
+                </button>
+                <div class="menu-options" id="menu-options">
+                    <button class="menu-option" id="feedback-btn">
+                        <i class="fas fa-bug"></i> 问题反馈
+                    </button>
+                    <button class="menu-option" id="support-btn">
+                        <i class="fas fa-headset"></i> 人工客服
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <footer>
+        <p>© 2025 小可乐工具站 | 站点智能机器人 | <a href="https://www.deepseek.com/" target="_blank">DeepSeek</a> 提供技术支持</p>
+    </footer>
+    
+    <script src="https://cdn.jsdelivr.net/npm/@tensorflow/tfjs@3.18.0/dist/tf.min.js"></script>
+    <script>
+        // 快捷问题列表
+        const quickQuestions = [
+            "小可乐工具站是做什么的？",
+            "有什么功能？",
+            "怎么联系客服？",
+            "网站地址是什么？",
+            "如何使用工具站？",
+            "常见问题解答",
+        ];
+        
+        // 答案映射
+        const answerMap = {
+            "小可乐工具站是做什么的？": "小可乐工具站是一个开源免费的实用工具导航系统，同时也有很多程序/软件包含在网站中，您可以按照自己的需求进行获取。",
+            "有什么功能？": "可以导航到在线工具网站、可以下载各种手机/电脑实用工具、可以使用在线工具等等",
+            "怎么联系客服？": "您可以通过邮件3430667576@qq.com或2171156701@qq.com联系我们。",
+            "网站地址是什么？": "我们的网站地址是https://colatools.cn。",
+            "如何使用工具站？": "只需访问网站，选择您需要的工具，跳转或下载使用即可；在站点“工具”导航栏最下方有工具具体使用/下载步骤可以参考！",
+            "常见问题解答": "1.小可乐工具站收费吗？2.小可乐工具站可以永久免费使用吗？3.小可乐工具站贡献者协议4.小可乐工具站贡献指南5.小可乐工具站技术支持。在消息框输入对应问题的数字，你就能精确地找到相关问题的答案。",
+            "你是谁": "我是小可乐工具站智能机器人，很高兴为您服务。有任何问题可以先和我沟通，若得不到你想要的答案，那就联系技术吧！"
+        };
+        
+        document.addEventListener('DOMContentLoaded', function() {
+            const chatMessages = document.getElementById('chat-messages');
+            const userInput = document.getElementById('user-input');
+            const sendBtn = document.getElementById('send-btn');
+            const quickQuestionsContainer = document.getElementById('quick-questions');
+            const menuBtn = document.getElementById('menu-btn');
+            const menuOptions = document.getElementById('menu-options');
+            const feedbackBtn = document.getElementById('feedback-btn');
+            const supportBtn = document.getElementById('support-btn');
+            
+            // 添加快捷问题按钮
+            quickQuestions.forEach(question => {
+                const btn = document.createElement('button');
+                btn.className = 'quick-question';
+                btn.textContent = question;
+                btn.addEventListener('click', () => {
+                    userInput.value = question;
+                    sendMessage();
+                });
+                quickQuestionsContainer.appendChild(btn);
+            });
+            
+            // 启用/禁用发送按钮
+            userInput.addEventListener('input', function() {
+                sendBtn.disabled = this.value.trim() === '';
+            });
+            
+            // 菜单按钮点击事件
+            menuBtn.addEventListener('click', function(e) {
+                e.stopPropagation();
+                menuOptions.classList.toggle('show');
+            });
+            
+            // 点击页面其他地方关闭菜单
+            document.addEventListener('click', function() {
+                menuOptions.classList.remove('show');
+            });
+            
+            // 问题反馈按钮
+            feedbackBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('mailto:3430667576@qq.com?subject=问题反馈', '_blank');
+            });
+            
+            // 人工客服按钮
+            supportBtn.addEventListener('click', function(e) {
+                e.preventDefault();
+                window.open('https://qq.chat.cp.com.cn/', '_blank');
+            });
+            
+            async function sendMessage() {
+                const message = userInput.value.trim();
+                if (!message) return;
+                
+                // 添加用户消息到聊天界面
+                addMessage(message, 'user');
+                userInput.value = '';
+                sendBtn.disabled = true;
+                
+                // 显示机器人正在输入
+                showTypingIndicator();
+                
+                try {
+                    // 这里可以替换为实际的模型调用
+                    // 现在使用简单的答案映射
+                    let botResponse = answerMap[message] || "我还在学习中，暂时无法回答这个问题。您可以尝试其他问题。";
+                    
+                    // 模拟网络延迟
+                    await new Promise(resolve => setTimeout(resolve, 800));
+                    
+                    removeTypingIndicator();
+                    typewriterEffect(botResponse, 'bot');
+                } catch (error) {
+                    console.error('Error:', error);
+                    removeTypingIndicator();
+                    typewriterEffect("抱歉，我暂时无法处理您的请求。", 'bot');
+                }
+            }
+            
+            // 逐字打印效果
+            function typewriterEffect(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                
+                const messageText = document.createElement('div');
+                messageDiv.appendChild(messageText);
+                
+                const timeSpan = document.createElement('div');
+                timeSpan.className = 'message-time';
+                timeSpan.textContent = getCurrentTime();
+                messageDiv.appendChild(timeSpan);
+                
+                chatMessages.appendChild(messageDiv);
+                
+                let i = 0;
+                const speed = 30; // 打字速度(毫秒)
+                
+                function typeWriter() {
+                    if (i < text.length) {
+                        messageText.textContent += text.charAt(i);
+                        i++;
+                        setTimeout(typeWriter, speed);
+                        scrollToBottom();
+                    }
+                }
+                
+                typeWriter();
+            }
+            
+            // 点击发送按钮
+            sendBtn.addEventListener('click', sendMessage);
+            
+            // 按回车键发送
+            userInput.addEventListener('keypress', function(e) {
+                if (e.key === 'Enter') {
+                    sendMessage();
+                }
+            });
+            
+            // 添加普通消息到聊天界面
+            function addMessage(text, sender) {
+                const messageDiv = document.createElement('div');
+                messageDiv.className = `message ${sender}-message`;
+                
+                const messageText = document.createElement('div');
+                messageText.textContent = text;
+                messageDiv.appendChild(messageText);
+                
+                const timeSpan = document.createElement('div');
+                timeSpan.className = 'message-time';
+                timeSpan.textContent = getCurrentTime();
+                messageDiv.appendChild(timeSpan);
+                
+                chatMessages.appendChild(messageDiv);
+                scrollToBottom();
+            }
+            
+            // 显示机器人正在输入
+            function showTypingIndicator() {
+                const typingDiv = document.createElement('div');
+                typingDiv.className = 'typing-indicator';
+                typingDiv.id = 'typing-indicator';
+                
+                for (let i = 0; i < 3; i++) {
+                    const dot = document.createElement('div');
+                    dot.className = 'typing-dot';
+                    typingDiv.appendChild(dot);
+                }
+                
+                chatMessages.appendChild(typingDiv);
+                scrollToBottom();
+            }
+            
+            // 移除输入指示器
+            function removeTypingIndicator() {
+                const typingIndicator = document.getElementById('typing-indicator');
+                if (typingIndicator) {
+                    typingIndicator.remove();
+                }
+            }
+            
+            // 获取当前时间
+            function getCurrentTime() {
+                const now = new Date();
+                return `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+            }
+            
+            // 滚动到底部
+            function scrollToBottom() {
+                chatMessages.scrollTop = chatMessages.scrollHeight;
+            }
+            
+            // 初始欢迎消息(使用打字机效果)
+            setTimeout(() => {
+                const welcomeText = "您好！我是小可乐工具站的智能助手，可以回答关于工具站的各种问题。有什么我可以帮助您的吗？（因自定义后台知识库，只支持对应问题的搜索，不支持个性聊天；可以点击下方“常见问题解决”快捷按钮，找到问题源和解决方法）";
+                typewriterEffect(welcomeText, 'bot');
+            }, 1000);
+        });
+    </script>
+</body>
+</html>
+
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->

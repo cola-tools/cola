@@ -1,0 +1,529 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <link rel="shortcut icon" href="assets/vico/main.ico" type="image/x-icon">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>4K图片库 - 小可乐工具站</title>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+SC:wght@300;400;500;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta3/css/all.min.css">
+    <style>
+        :root {
+            --primary-color: #3498db;
+            --secondary-color: #2980b9;
+            --accent-color: #5dade2;
+            --light-color: #ebf5fb;
+            --dark-color: #2c3e50;
+            --card-bg: #ffffff;
+            --shadow: 0 4px 12px rgba(52, 152, 219, 0.15);
+            --border-radius: 8px;
+            --transition: all 0.3s ease;
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Noto Sans SC', sans-serif;
+            background-color: var(--light-color);
+            color: var(--dark-color);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1200px;
+            width: 100%;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px 0;
+        }
+        
+        h1 {
+            font-size: 2rem;
+            color: var(--primary-color);
+            margin-bottom: 10px;
+            font-weight: 700;
+        }
+        
+        .subtitle {
+            font-size: 0.9rem;
+            color: #666;
+            opacity: 0.8;
+        }
+        
+        .main-content {
+            display: flex;
+            gap: 20px;
+        }
+        
+        .current-image-container {
+            flex: 2;
+            background: var(--card-bg);
+            border-radius: var(--border-radius);
+            box-shadow: var(--shadow);
+            overflow: hidden;
+            position: relative;
+            aspect-ratio: 16/9;
+        }
+        
+        .image-placeholder {
+            width: 100%;
+            height: 100%;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+            color: #999;
+        }
+        
+        .image-placeholder i {
+            font-size: 3rem;
+            margin-bottom: 15px;
+            color: var(--primary-color);
+        }
+        
+        .current-image {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            display: none;
+        }
+        
+        .image-info {
+            padding: 20px;
+            background: var(--card-bg);
+        }
+        
+        .image-title {
+            font-size: 1.2rem;
+            margin-bottom: 10px;
+            color: var(--dark-color);
+            font-weight: 500;
+        }
+        
+        .image-meta {
+            display: flex;
+            justify-content: space-between;
+            font-size: 0.9rem;
+            color: #666;
+        }
+        
+        .history-sidebar {
+            flex: 1;
+            max-height: 80vh;
+            overflow-y: auto;
+        }
+        
+        .history-title {
+            font-size: 1.1rem;
+            margin-bottom: 15px;
+            color: var(--dark-color);
+            padding-bottom: 10px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .history-grid {
+            display: grid;
+            grid-template-columns: repeat(2, 1fr);
+            gap: 10px;
+        }
+        
+        .history-item {
+            cursor: pointer;
+            border-radius: var(--border-radius);
+            overflow: hidden;
+            aspect-ratio: 4/3;
+            position: relative;
+        }
+        
+        .history-item img {
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            transition: var(--transition);
+        }
+        
+        .history-item:hover img {
+            transform: scale(1.05);
+        }
+        
+        .controls {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 20px 0;
+        }
+        
+        .btn {
+            padding: 12px 25px;
+            border: none;
+            border-radius: 50px;
+            font-size: 1rem;
+            font-weight: 500;
+            cursor: pointer;
+            transition: var(--transition);
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+        
+        .btn-primary {
+            background: var(--primary-color);
+            color: white;
+            box-shadow: 0 4px 15px rgba(52, 152, 219, 0.3);
+        }
+        
+        .btn-primary:hover {
+            background: var(--secondary-color);
+            transform: translateY(-2px);
+        }
+        
+        .btn-secondary {
+            background: white;
+            color: var(--primary-color);
+            border: 1px solid var(--primary-color);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--light-color);
+        }
+        
+        .loading {
+            display: none;
+            text-align: center;
+            padding: 20px;
+        }
+        
+        .loading.show {
+            display: block;
+        }
+        
+        .spinner {
+            width: 40px;
+            height: 40px;
+            margin: 0 auto;
+            border: 4px solid rgba(52, 152, 219, 0.2);
+            border-top: 4px solid var(--primary-color);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+        }
+        
+        @keyframes spin {
+            0% { transform: rotate(0deg); }
+            100% { transform: rotate(360deg); }
+        }
+        
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 10px;
+            text-align: center;
+            display: none;
+        }
+        
+        .error-message.show {
+            display: block;
+        }
+        
+        footer {
+            text-align: center;
+            margin-top: auto;
+            padding: 20px 0;
+            color: #999;
+            font-size: 0.8rem;
+        }
+        
+        @media (max-width: 768px) {
+            .main-content {
+                flex-direction: column;
+            }
+            
+            .controls {
+                flex-direction: column;
+                align-items: center;
+            }
+            
+            .btn {
+                width: 100%;
+                max-width: 300px;
+                justify-content: center;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>4K图片库</h1>
+            <p class="subtitle">因API接口不稳定或服务器重启等各种原因，会出现获取失败、重复获取等行为，但不影响用户正常获取图片；获取失败后，会自动获取下一张，用户无需手动操作</p>
+        </header>
+        
+        <div class="main-content">
+            <div class="current-image-container" id="currentImageContainer">
+                <div class="image-placeholder" id="imagePlaceholder">
+                    <i class="fas fa-image"></i>
+                    <p>正在获取第一张图片...</p>
+                </div>
+                <img class="current-image" id="currentImage" alt="当前4K图片">
+                <div class="image-info" id="imageInfo">
+                    <h3 class="image-title" id="imageTitle">4K壁纸</h3>
+                    <div class="image-meta">
+                        <span id="imageSize">分辨率: 3840×2160</span>
+                        <span id="imageDate">来源: Bing壁纸</span>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="history-sidebar">
+                <h3 class="history-title">历史图片</h3>
+                <div class="history-grid" id="historyGrid">
+                    <!-- 历史图片将在这里动态加载 -->
+                </div>
+            </div>
+        </div>
+        
+        <div id="loading" class="loading">
+            <div class="spinner"></div>
+            <p>正在加载图片...</p>
+        </div>
+        
+        <div id="errorMessage" class="error-message"></div>
+        
+        <div class="controls">
+            <button class="btn btn-primary" id="nextBtn" target="_blank">
+                <i class="fas fa-arrow-right"></i>
+                下一张图片
+            </button>
+            <button class="btn btn-secondary" id="downloadBtn" target="_blank">
+                <i class="fas fa-download"></i>
+                下载当前图片
+            </button>
+        </div>
+        
+        <footer>
+            <p>© 2025 小可乐工具站 | 4K图片库</p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const currentImageContainer = document.getElementById('currentImageContainer');
+            const imagePlaceholder = document.getElementById('imagePlaceholder');
+            const currentImage = document.getElementById('currentImage');
+            const imageTitle = document.getElementById('imageTitle');
+            const imageSize = document.getElementById('imageSize');
+            const imageDate = document.getElementById('imageDate');
+            const nextBtn = document.getElementById('nextBtn');
+            const downloadBtn = document.getElementById('downloadBtn');
+            const loading = document.getElementById('loading');
+            const errorMessage = document.getElementById('errorMessage');
+            const historyGrid = document.getElementById('historyGrid');
+            
+            // 使用多个API源确保无限获取
+            const API_SOURCES = [
+                {
+                    name: "Bing壁纸",
+                    url: "https://bing.biturl.top/?resolution=3840&format=json&index=random",
+                    processor: data => ({
+                        url: data.url,
+                        title: data.copyright || "Bing每日壁纸",
+                        source: "Bing壁纸",
+                        date: data.enddate ? 
+                            `${data.enddate.slice(0,4)}-${data.enddate.slice(4,6)}-${data.enddate.slice(6,8)}` : 
+                            new Date().toISOString().slice(0,10)
+                    })
+                },
+                {
+                    name: "Unsplash自然",
+                    url: "https://source.unsplash.com/random/3840x2160/?nature,landscape",
+                    processor: data => ({
+                        url: data.url,
+                        title: "自然风光",
+                        source: "Unsplash",
+                        date: new Date().toISOString().slice(0,10)
+                    })
+                },
+                {
+                    name: "Unsplash城市",
+                    url: "https://source.unsplash.com/random/3840x2160/?city,urban",
+                    processor: data => ({
+                        url: data.url,
+                        title: "城市景观",
+                        source: "Unsplash",
+                        date: new Date().toISOString().slice(0,10)
+                    })
+                },
+                {
+                    name: "Unsplash动物",
+                    url: "https://source.unsplash.com/random/3840x2160/?animals,wildlife ",
+                    processor: data => ({
+                        url: data.url,
+                        title: "野生动物",
+                        source: "Unsplash",
+                        date: new Date().toISOString().slice(0,10)
+                    })
+                },
+                {
+                    name: "Picsum照片",
+                    url: "https://picsum.photos/3840/2160" ,
+                    processor: data => ({
+                        url: data.url,
+                        title: "随机图片",
+                        source: "Picsum",
+                        date: new Date().toISOString().slice(0,10)
+                    })
+                }
+            ];
+            
+            // 存储历史图片
+            let historyImages = [];
+            let currentImageData = null;
+            
+            // 获取随机4K图片
+            async function getRandomImage() {
+                loading.classList.add('show');
+                imagePlaceholder.style.display = 'flex';
+                currentImage.style.display = 'none';
+                errorMessage.classList.remove('show');
+                
+                // 随机选择API源
+                const apiSource = API_SOURCES[Math.floor(Math.random() * API_SOURCES.length)];
+                
+                try {
+                    const response = await fetch(apiSource.url);
+                    if (!response.ok) throw new Error('API请求失败');
+                    
+                    // 处理不同API的响应
+                    let imageData;
+                    if (apiSource.url.includes('bing.biturl.top')) {
+                        const data = await response.json();
+                        imageData = apiSource.processor(data);
+                    } else if (apiSource.url.includes('source.unsplash.com') || apiSource.url.includes('picsum.photos')) {
+                        imageData = apiSource.processor({ url: response.url });
+                    }
+                    
+                    // 添加到历史记录
+                    if (currentImageData) {
+                        historyImages.unshift(currentImageData);
+                        updateHistoryGrid();
+                    }
+                    
+                    // 显示新图片
+                    currentImageData = imageData;
+                    displayCurrentImage(imageData);
+                } catch (error) {
+                    console.error('获取图片失败:', error);
+                    showError('获取图片失败，正在尝试其他源...');
+                    // 失败后自动尝试其他API源
+                    setTimeout(getRandomImage, 1000);
+                }
+            }
+            
+            // 显示当前图片
+            function displayCurrentImage(imageData) {
+                currentImage.src = imageData.url;
+                imageTitle.textContent = imageData.title;
+                imageSize.textContent = `分辨率: 3840×2160`;
+                imageDate.textContent = `来源: ${imageData.source} | 日期: ${imageData.date}`;
+                
+                currentImage.style.display = 'block';
+                imagePlaceholder.style.display = 'none';
+                loading.classList.remove('show');
+            }
+            
+            // 更新历史图片网格
+            function updateHistoryGrid() {
+                historyGrid.innerHTML = '';
+                
+                // 只显示最近12张历史图片
+                const recentHistory = historyImages.slice(0, 12);
+                
+                recentHistory.forEach((image, index) => {
+                    const historyItem = document.createElement('div');
+                    historyItem.className = 'history-item';
+                    historyItem.innerHTML = `
+                        <img src="${image.url}" alt="${image.title}" loading="lazy">
+                    `;
+                    
+                    // 点击历史图片可以重新查看
+                    historyItem.addEventListener('click', () => {
+                        // 将当前图片加入历史
+                        if (currentImageData) {
+                            historyImages.unshift(currentImageData);
+                        }
+                        
+                        // 显示选中的历史图片
+                        currentImageData = image;
+                        displayCurrentImage(image);
+                        
+                        // 更新历史网格
+                        updateHistoryGrid();
+                    });
+                    
+                    historyGrid.appendChild(historyItem);
+                });
+            }
+            
+            // 下载当前图片
+            function downloadCurrentImage() {
+                if (!currentImage.src || currentImage.src.includes('data:')) {
+                    showError('当前没有可下载的图片');
+                    return;
+                }
+                
+                const link = document.createElement('a');
+                link.href = currentImage.src;
+                link.download = `4K壁纸_${new Date().toISOString().slice(0,10)}.jpg`;
+                document.body.appendChild(link);
+                link.click();
+                document.body.removeChild(link);
+                
+                // 显示下载成功提示
+                const originalText = downloadBtn.innerHTML;
+                downloadBtn.innerHTML = '<i class="fas fa-check"></i> 下载成功';
+                setTimeout(() => {
+                    downloadBtn.innerHTML = originalText;
+                }, 2000);
+            }
+            
+            // 显示错误信息
+            function showError(message) {
+                errorMessage.textContent = message;
+                errorMessage.classList.add('show');
+            }
+            
+            // 下一张按钮点击事件
+            nextBtn.addEventListener('click', getRandomImage);
+            
+            // 下载按钮点击事件
+            downloadBtn.addEventListener('click', downloadCurrentImage);
+            
+            // 初始加载一张图片
+            getRandomImage();
+        });
+    </script>
+</body>
+</html>
+
+<!--
+站长声明：本站版权归 小可乐工具站 所有，不得私自交易，不得商用，不得用于违法行为。
+此站点仅作为娱乐设计，不得用于开源项目或其他有关网络的任何行为，仅作为演示内容展示；
+因开发者自身原因导致的任何行为，都由本人负责，与本站点站长以及相关人员无关，有任何
+关于本站的异议，请联系本站站长；若发现侵权者，一律严格处罚！
+
+微信公众号：小可乐工具站
+邮箱联系：2171156701@qq.com
+其他联系方式：
+QQ官方论坛群：893776311
+-->
