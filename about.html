@@ -9,6 +9,267 @@
     <link rel="stylesheet" href="assets/css/animations.css">
     <link rel="stylesheet" href="assets/css/responsive.css">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
+    <!-- 在 head 标签内，紧接在现有样式之后添加 -->
+<style>
+    /* 聊天机器人样式 */
+    .chat-bot-container {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 350px;
+        max-height: 500px;
+        background: #fff;
+        border-radius: 12px;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        display: flex;
+        flex-direction: column;
+        z-index: 1000;
+        overflow: hidden;
+        transform: translateY(100%);
+        opacity: 0;
+        transition: all 0.3s ease;
+    }
+    
+    .chat-bot-container.active {
+        transform: translateY(0);
+        opacity: 1;
+    }
+    
+    .chat-bot-header {
+        background: #6c5ce7;
+        color: white;
+        padding: 12px 15px;
+        display: flex;
+        align-items: center;
+        justify-content: space-between;
+        cursor: pointer;
+    }
+    
+    .chat-bot-header h3 {
+        margin: 0;
+        font-size: 1rem;
+        display: flex;
+        align-items: center;
+        gap: 8px;
+    }
+    
+    .chat-bot-toggle {
+        background: none;
+        border: none;
+        color: white;
+        font-size: 1rem;
+        cursor: pointer;
+    }
+    
+    .chat-bot-body {
+        flex: 1;
+        display: flex;
+        flex-direction: column;
+        height: 400px;
+    }
+    
+    .chat-messages {
+        flex: 1;
+        padding: 1rem;
+        overflow-y: auto;
+        display: flex;
+        flex-direction: column;
+        gap: 0.8rem;
+    }
+    
+    .message {
+        max-width: 80%;
+        padding: 0.6rem 1rem;
+        border-radius: 12px;
+        position: relative;
+        animation: fadeIn 0.3s ease;
+        font-size: 0.9rem;
+        line-height: 1.4;
+    }
+    
+    @keyframes fadeIn {
+        from { opacity: 0; transform: translateY(10px); }
+        to { opacity: 1; transform: translateY(0); }
+    }
+    
+    .bot-message {
+        align-self: flex-start;
+        background-color: rgba(108, 92, 231, 0.1);
+        border-bottom-left-radius: 4px;
+        color: #2d3436;
+    }
+    
+    .user-message {
+        align-self: flex-end;
+        background-color: #00b894;
+        color: white;
+        border-bottom-right-radius: 4px;
+    }
+    
+    .message-time {
+        font-size: 0.7rem;
+        opacity: 0.7;
+        margin-top: 0.3rem;
+        text-align: right;
+    }
+    
+    .chat-input-area {
+        padding: 0.8rem;
+        border-top: 1px solid #dfe6e9;
+        display: flex;
+        gap: 0.5rem;
+        background: white;
+    }
+    
+    .chat-input-area input {
+        flex: 1;
+        padding: 0.6rem 0.8rem;
+        border: 1px solid #dfe6e9;
+        border-radius: 8px;
+        font-size: 0.9rem;
+        transition: all 0.3s ease;
+    }
+    
+    .chat-input-area input:focus {
+        border-color: #6c5ce7;
+        outline: none;
+        box-shadow: 0 0 0 3px rgba(108, 92, 231, 0.2);
+    }
+    
+    .chat-send-btn {
+        background-color: #6c5ce7;
+        color: white;
+        border: none;
+        width: 40px;
+        border-radius: 8px;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        transition: all 0.3s ease;
+    }
+    
+    .chat-send-btn:hover {
+        background-color: #5649c0;
+    }
+    
+    .chat-send-btn:disabled {
+        background-color: #b2bec3;
+        cursor: not-allowed;
+    }
+    
+    .typing-indicator {
+        display: flex;
+        align-items: center;
+        gap: 0.3rem;
+        padding: 0.6rem 1rem;
+        background-color: rgba(108, 92, 231, 0.1);
+        border-radius: 12px;
+        align-self: flex-start;
+        margin-bottom: 0.5rem;
+    }
+    
+    .typing-dot {
+        width: 6px;
+        height: 6px;
+        background-color: #6c5ce7;
+        border-radius: 50%;
+        animation: typingAnimation 1.4s infinite ease-in-out;
+    }
+    
+    .typing-dot:nth-child(1) {
+        animation-delay: 0s;
+    }
+    
+    .typing-dot:nth-child(2) {
+        animation-delay: 0.2s;
+    }
+    
+    .typing-dot:nth-child(3) {
+        animation-delay: 0.4s;
+    }
+    
+    @keyframes typingAnimation {
+        0%, 60%, 100% { transform: translateY(0); }
+        30% { transform: translateY(-3px); }
+    }
+    
+    .quick-questions {
+        display: flex;
+        overflow-x: auto;
+        gap: 0.5rem;
+        padding: 0.8rem;
+        background: white;
+        scrollbar-width: none;
+    }
+    
+    .quick-questions::-webkit-scrollbar {
+        display: none;
+    }
+    
+    .quick-question {
+        background-color: rgba(108, 92, 231, 0.1);
+        color: #6c5ce7;
+        border: none;
+        padding: 0.4rem 0.8rem;
+        border-radius: 20px;
+        font-size: 0.7rem;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        white-space: nowrap;
+        flex-shrink: 0;
+    }
+    
+    .quick-question:hover {
+        background-color: rgba(108, 92, 231, 0.2);
+    }
+    
+    .chat-bot-launcher {
+        position: fixed;
+        bottom: 20px;
+        right: 20px;
+        width: 60px;
+        height: 60px;
+        background-color: #6c5ce7;
+        color: white;
+        border-radius: 50%;
+        display: flex;
+        align-items: center;
+        justify-content: center;
+        cursor: pointer;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.2);
+        z-index: 999;
+        transition: all 0.3s ease;
+    }
+    
+    .chat-bot-launcher:hover {
+        background-color: #5649c0;
+        transform: scale(1.1);
+    }
+    
+    .chat-bot-launcher i {
+        font-size: 1.5rem;
+    }
+    
+    @media (max-width: 600px) {
+        .chat-bot-container {
+            width: calc(100% - 40px);
+            max-height: 70vh;
+            bottom: 10px;
+            right: 10px;
+        }
+        
+        .chat-bot-launcher {
+            width: 50px;
+            height: 50px;
+            bottom: 10px;
+            right: 10px;
+        }
+    }
+</style>
+
+    
 </head>
 <body>
     <!-- 3D背景粒子效果 -->
@@ -31,7 +292,6 @@
                     <li class="nav-item"><a href="forum.html"><i class="fas fa-comments"></i> 论坛</a></li>
                     <li class="nav-item"><a href="https://s.threatbook.com/report/url/ab7b844b54aa27bcad55b76d3e84bc00" target="_blank"><i class="fas fa-file-shield" ></i> 站点安全报告</a></li>
                     <li class="nav-item active"><a href="about.html"><i class="fas fa-info-circle"></i> 关于我们</a></li>
-                    <li class="nav-item"><a href="Cola - tools/Cola-chat.HTML" target="_blank"><i class="fas fa-question-circle"></i> 帮助</a></li>
                 </ul>
             </div>
             <div class="mobile-menu-btn">
@@ -248,6 +508,36 @@
         </div>
     </footer>
 
+    <!-- 聊天机器人启动按钮 -->
+<div class="chat-bot-launcher" id="chatBotLauncher">
+    <i class="fas fa-robot"></i>
+</div>
+
+<!-- 聊天机器人容器 -->
+<div class="chat-bot-container" id="chatBotContainer">
+    <div class="chat-bot-header" id="chatBotHeader">
+        <h3><i class="fas fa-robot"></i> 小可乐智能助手</h3>
+        <button class="chat-bot-toggle" id="chatBotToggle">
+            <i class="fas fa-minus"></i>
+        </button>
+    </div>
+    <div class="chat-bot-body">
+        <div class="chat-messages" id="chat-messages">
+            <div class="welcome-message"></div>
+        </div>
+        <div class="quick-questions" id="quick-questions">
+            <!-- 快捷问题按钮将通过JavaScript动态生成 -->
+        </div>
+        <div class="chat-input-area">
+            <input type="text" id="user-input" placeholder="输入消息..." autocomplete="off">
+            <button class="chat-send-btn" id="send-btn" disabled>
+                <i class="fas fa-paper-plane"></i>
+            </button>
+        </div>
+    </div>
+</div>
+
+
     <script src="assets/js/particles.js"></script>
     <script src="assets/js/main.js"></script>
     <script>
@@ -274,5 +564,222 @@
             document.getElementById('contact-modal').style.display = 'none';
         });
     </script>
+
+    <script>
+    // 快捷问题列表
+    const quickQuestions = [
+        "小可乐工具站是做什么的？",
+        "有什么功能？",
+        "怎么联系客服？",
+        "网站地址是什么？",
+        "如何使用工具站？",
+        "常见问题解答",
+    ];
+    
+    // 答案映射
+    const answerMap = {
+        "小可乐工具站是做什么的？": "小可乐工具站是一个开源免费的实用工具导航系统，同时也有很多程序/软件包含在网站中，您可以按照自己的需求进行获取。",
+        "有什么功能？": "可以导航到在线工具网站、可以下载各种手机/电脑实用工具、可以使用在线工具等等",
+        "怎么联系客服？": "您可以通过邮件3430667576@qq.com或2171156701@qq.com联系我们。",
+        "网站地址是什么？": "我们的网站地址是https://colatools.cn。",
+        "如何使用工具站？": "只需访问网站，选择您需要的工具，跳转或下载使用即可；在站点“工具”导航栏最下方有工具具体使用/下载步骤可以参考！",
+        "常见问题解答": "1.小可乐工具站收费吗？2.小可乐工具站会一直线上运营吗？3.小可乐工具站贡献者协议4.小可乐工具站贡献指南5.小可乐工具站技术支持。在消息框输入对应问题的数字，你就能精确地找到相关问题的答案。",
+        "你是谁": "我是小可乐工具站智能机器人，很高兴为您服务。有任何问题可以先和我沟通，若得不到你想要的答案，那就联系技术吧！",
+        "1": "小可乐工具站因近期运营，对广大用户免费使用，而且功能都很基础，所以对用户全面开源免费使用。",
+        "2": "小可乐工具站对此只能说“不晓得”,因为后期在线运营还是主要看用户支持和精神以及其他方面的支持，如果后期访问数，点击量变低，域名续费和站点服务器运维资金不足等的情况下，小可乐工具站会被迫停止在线运营；所以希望广大用户持续支持我们，让我们将网站持续运营下去，谢谢您们！",
+        "3": "您可以在站点页面下滑，找到页脚信息中的“贡献者协议”，点击访问即可查看详细贡献协议。",
+        "4": "您可以在站点页面下滑，找到页脚信息中的“贡献指南”，点击访问即可查看详细贡献指南，帮你快速了解如何贡献代码。",
+        "5": "小可乐工具站由多个站点共同支持；例如“DeepSeek”、“xxAPI”等，其他技术支持暂未了解到站点信息，如有看到您的产品，请联系站长！"
+    };
+    
+    document.addEventListener('DOMContentLoaded', function() {
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+        const quickQuestionsContainer = document.getElementById('quick-questions');
+        const chatBotLauncher = document.getElementById('chatBotLauncher');
+        const chatBotContainer = document.getElementById('chatBotContainer');
+        const chatBotHeader = document.getElementById('chatBotHeader');
+        const chatBotToggle = document.getElementById('chatBotToggle');
+        
+        // 初始化聊天机器人状态
+        let chatBotOpen = false;
+        
+        // 添加快捷问题按钮
+        quickQuestions.forEach(question => {
+            const btn = document.createElement('button');
+            btn.className = 'quick-question';
+            btn.textContent = question;
+            btn.addEventListener('click', () => {
+                userInput.value = question;
+                sendMessage();
+            });
+            quickQuestionsContainer.appendChild(btn);
+        });
+        
+        // 启用/禁用发送按钮
+        userInput.addEventListener('input', function() {
+            sendBtn.disabled = this.value.trim() === '';
+        });
+        
+        // 聊天机器人启动按钮点击事件
+        chatBotLauncher.addEventListener('click', function() {
+            chatBotOpen = !chatBotOpen;
+            if (chatBotOpen) {
+                chatBotContainer.classList.add('active');
+                chatBotLauncher.style.opacity = '0';
+                setTimeout(() => {
+                    chatBotLauncher.style.display = 'none';
+                }, 300);
+            } else {
+                chatBotContainer.classList.remove('active');
+                chatBotLauncher.style.display = 'flex';
+                setTimeout(() => {
+                    chatBotLauncher.style.opacity = '1';
+                }, 10);
+            }
+        });
+        
+        // 聊天机器人头部点击事件
+        chatBotHeader.addEventListener('click', function() {
+            chatBotOpen = false;
+            chatBotContainer.classList.remove('active');
+            chatBotLauncher.style.display = 'flex';
+            setTimeout(() => {
+                chatBotLauncher.style.opacity = '1';
+            }, 10);
+        });
+        
+        // 点击发送按钮
+        sendBtn.addEventListener('click', sendMessage);
+        
+        // 按回车键发送
+        userInput.addEventListener('keypress', function(e) {
+            if (e.key === 'Enter') {
+                sendMessage();
+            }
+        });
+        
+        async function sendMessage() {
+            const message = userInput.value.trim();
+            if (!message) return;
+            
+            // 添加用户消息到聊天界面
+            addMessage(message, 'user');
+            userInput.value = '';
+            sendBtn.disabled = true;
+            
+            // 显示机器人正在输入
+            showTypingIndicator();
+            
+            try {
+                // 这里可以替换为实际的模型调用
+                // 现在使用简单的答案映射
+                let botResponse = answerMap[message] || "我还在学习中，暂时无法回答这个问题。您可以尝试其他问题。";
+                
+                // 模拟网络延迟
+                await new Promise(resolve => setTimeout(resolve, 800));
+                
+                removeTypingIndicator();
+                typewriterEffect(botResponse, 'bot');
+            } catch (error) {
+                console.error('Error:', error);
+                removeTypingIndicator();
+                typewriterEffect("抱歉，我暂时无法处理您的请求。", 'bot');
+            }
+        }
+        
+        // 逐字打印效果
+        function typewriterEffect(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            const messageText = document.createElement('div');
+            messageDiv.appendChild(messageText);
+            
+            const timeSpan = document.createElement('div');
+            timeSpan.className = 'message-time';
+            timeSpan.textContent = getCurrentTime();
+            messageDiv.appendChild(timeSpan);
+            
+            chatMessages.appendChild(messageDiv);
+            
+            let i = 0;
+            const speed = 50; // 打字速度(毫秒)
+            
+            function typeWriter() {
+                if (i < text.length) {
+                    messageText.textContent += text.charAt(i);
+                    i++;
+                    setTimeout(typeWriter, speed);
+                    scrollToBottom();
+                }
+            }
+            
+            typeWriter();
+        }
+        
+        // 添加普通消息到聊天界面
+        function addMessage(text, sender) {
+            const messageDiv = document.createElement('div');
+            messageDiv.className = `message ${sender}-message`;
+            
+            const messageText = document.createElement('div');
+            messageText.textContent = text;
+            messageDiv.appendChild(messageText);
+            
+            const timeSpan = document.createElement('div');
+            timeSpan.className = 'message-time';
+            timeSpan.textContent = getCurrentTime();
+            messageDiv.appendChild(timeSpan);
+            
+            chatMessages.appendChild(messageDiv);
+            scrollToBottom();
+        }
+        
+        // 显示机器人正在输入
+        function showTypingIndicator() {
+            const typingDiv = document.createElement('div');
+            typingDiv.className = 'typing-indicator';
+            typingDiv.id = 'typing-indicator';
+            
+            for (let i = 0; i < 3; i++) {
+                const dot = document.createElement('div');
+                dot.className = 'typing-dot';
+                typingDiv.appendChild(dot);
+            }
+            
+            chatMessages.appendChild(typingDiv);
+            scrollToBottom();
+        }
+        
+        // 移除输入指示器
+        function removeTypingIndicator() {
+            const typingIndicator = document.getElementById('typing-indicator');
+            if (typingIndicator) {
+                typingIndicator.remove();
+            }
+        }
+        
+        // 获取当前时间
+        function getCurrentTime() {
+            const now = new Date();
+            return `${now.getHours()}:${now.getMinutes().toString().padStart(2, '0')}`;
+        }
+        
+        // 滚动到底部
+        function scrollToBottom() {
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+        }
+        
+        // 初始欢迎消息(使用打字机效果)
+        setTimeout(() => {
+            const welcomeText = "您好！我是小可乐工具站的智能助手，可以回答关于工具站的各种问题。有什么我可以帮助您的吗？（因自定义后台知识库，只支持对应问题的搜索，不支持个性聊天；可以点击下方“常见问题解决”快捷按钮，找到问题源和解决方法）";
+            typewriterEffect(welcomeText, 'bot');
+        }, 1000);
+    });
+</script>
+
+    
 </body>
 </html>
