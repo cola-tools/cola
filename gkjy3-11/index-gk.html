@@ -1,0 +1,1106 @@
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>高三(11)班高考加油</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://cdn.jsdelivr.net/npm/font-awesome@4.7.0/css/font-awesome.min.css" rel="stylesheet">
+    
+    <!-- 配置Tailwind自定义颜色和字体 -->
+    <script>
+        tailwind.config = {
+            theme: {
+                extend: {
+                    colors: {
+                        primary: '#B8860B',    // 金色 - 代表成功和希望
+                        secondary: '#8B0000',  // 深红色 - 代表激情和决心
+                        dark: '#1A1A2E',       // 深蓝黑色 - 代表稳重和专注
+                        light: '#F5F5F5',      // 浅色 - 用于文字
+                    },
+                    fontFamily: {
+                        sans: ['Inter', 'system-ui', 'sans-serif'],
+                        serif: ['Noto Serif SC', 'serif'],
+                        cursive: ['Ma Shan Zheng', 'cursive'],
+                    },
+                }
+            }
+        }
+    </script>
+    
+    <!-- 自定义工具类 -->
+    <style type="text/tailwindcss">
+        @layer utilities {
+            .content-auto {
+                content-visibility: auto;
+            }
+            .text-shadow {
+                text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.5);
+            }
+            .gold-gradient {
+                background: linear-gradient(135deg, #D4AF37 0%, #FFD700 50%, #D4AF37 100%);
+            }
+            .glass-effect {
+                background: rgba(255, 255, 255, 0.1);
+                backdrop-filter: blur(10px);
+                -webkit-backdrop-filter: blur(10px);
+                border: 1px solid rgba(255, 255, 255, 0.18);
+            }
+            .leaf {
+                clip-path: polygon(50% 0%, 100% 38%, 82% 100%, 18% 100%, 0% 38%);
+            }
+        }
+        /* 慢加载动画 */
+        @keyframes fadeIn {
+            from {
+                opacity: 0;
+                transform: translateY(20px);
+            }
+            to {
+                opacity: 1;
+                transform: translateY(0);
+            }
+        }
+    </style>
+    
+    <!-- 导入字体 -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Ma+Shan+Zheng&family=Noto+Serif+SC:wght@400;600;700&display=swap" rel="stylesheet">
+</head>
+<body class="bg-dark text-light min-h-screen">
+    <!-- 导航栏 -->
+    <nav class="fixed w-full z-50 transition-all duration-300" id="navbar">
+        <!-- 主容器：透明度设为 0（opacity-0） -->
+        <div class="glass-effect opacity-0 px-4 py-3 flex justify-between items-center">
+            <!-- 左侧 Logo 和班级名称 -->
+            <div class="flex items-center space-x-2">
+                <i class="fa fa-graduation-cap text-primary text-2xl"></i>
+                <span class="text-xl font-serif font-semibold">高三(11)班</span>
+            </div>
+
+            <!-- 桌面端导航链接（隐藏于移动端） -->
+            <div class="hidden md:flex space-x-8">
+                <a href="#home" class="hover:text-primary transition-colors duration-300">首页</a>
+                <a href="#photos" class="hover:text-primary transition-colors duration-300">青春纪念册</a>
+                <a href="#class-info" class="hover:text-primary transition-colors duration-300">班级风采</a>
+                <a href="#timeline" class="hover:text-primary transition-colors duration-300">成长轨迹</a>
+                <a href="#motivation" class="hover:text-primary transition-colors duration-300">金榜题名</a>
+            </div>
+
+            <!-- 移动端菜单切换按钮（仅显示在移动端） -->
+            <div class="md:hidden">
+                <button id="menu-toggle" class="text-2xl">
+                    <i class="fa fa-bars"></i>
+                </button>
+            </div>
+        </div>
+
+        <!-- 移动端菜单（默认隐藏，透明度同样设为 0） -->
+        <div id="mobile-menu" class="hidden glass-effect opacity-0 absolute w-full py-4">
+            <div class="flex flex-col space-y-4 px-4">
+                <a href="#home" class="hover:text-primary transition-colors duration-300">首页</a>
+                <a href="#photos" class="hover:text-primary transition-colors duration-300">青春纪念册</a>
+                <a href="#class-info" class="hover:text-primary transition-colors duration-300">班级风采</a>
+                <a href="#timeline" class="hover:text-primary transition-colors duration-300">成长轨迹</a>
+                <a href="#motivation" class="hover:text-primary transition-colors duration-300">金榜题名</a>
+            </div>
+        </div>
+    </nav>
+    <!-- 首页 -->
+    <section id="home" class="relative min-h-screen flex items-center justify-center overflow-hidden">
+        <!-- 背景图 -->
+        <div class="absolute inset-0 z-0">
+            <img src="https://picsum.photos/id/201/1920/1080" alt="高考背景" class="w-full h-full object-cover opacity-30">
+            <div class="absolute inset-0 bg-gradient-to-b from-dark/80 to-dark"></div>
+        </div>
+        
+        <!-- 倒计时 -->
+        <div class="absolute top-4 right-4 md:top-12 md:right-12 z-10">
+            <div class="glass-effect rounded-lg p-4 text-center">
+                <p class="text-sm md:text-base mb-1">距离高考还有</p>
+                <div id="countdown" class="text-xl md:text-2xl font-bold text-primary">
+                    <span id="days">00</span>天
+                    <span id="hours">00</span>时
+                    <span id="minutes">00</span>分
+                    <span id="seconds">00</span>秒
+                </div>
+            </div>
+        </div>
+        
+        <!-- 主要内容 -->
+        <div class="container mx-auto px-4 py-24 z-10">
+            <div class="text-center mb-12">
+                <h1 class="text-[clamp(2.5rem,8vw,5rem)] font-cursive text-primary mb-6 animate-fadeIn">
+                    为梦想而战
+                </h1>
+                <p class="text-[clamp(1rem,3vw,1.5rem)] font-serif mb-8 max-w-3xl mx-auto">
+                    愿你合上笔盖的那一刻，有着战士收刀入鞘的骄傲
+                </p>
+                <div class="flex flex-wrap justify-center gap-4 mt-10">
+                    <a href="#photos" class="px-6 py-3 bg-primary text-dark font-bold rounded-lg hover:bg-primary/80 transition-all duration-300 transform hover:scale-105">
+                        青春纪念册
+                    </a>
+                    <a href="#class-info" class="px-6 py-3 bg-secondary text-light font-bold rounded-lg hover:bg-secondary/80 transition-all duration-300 transform hover:scale-105">
+                        班级风采
+                    </a>
+                    <a href="#motivation" class="px-6 py-3 glass-effect text-light font-bold rounded-lg hover:bg-white/20 transition-all duration-300 transform hover:scale-105">
+                        金榜题名
+                    </a>
+                </div>
+            </div>
+            
+            <!-- 励志语录 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mt-16">
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "高考不是人生的终点，而是新征程的起点。"
+                    </p>
+                </div>
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "只有经历过地狱般的磨练，才能炼出创造天堂的力量。"
+                    </p>
+                </div>
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "每一次努力，都是在为未来的自己铺路。"
+                    </p>
+                </div>
+            </div>
+        </div>
+        
+        <!-- 波浪分隔线 -->
+        <div class="absolute bottom-0 left-0 right-0">
+            <svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1440 120" class="w-full h-auto">
+                <path fill="#1A1A2E" fill-opacity="1" d="M0,64L60,69.3C120,75,240,85,360,80C480,75,600,53,720,48C840,43,960,53,1080,58.7C1200,64,1320,64,1380,64L1440,64L1440,120L1380,120C1320,120,1200,120,1080,120C960,120,840,120,720,120C600,120,480,120,360,120C240,120,120,120,60,120L0,120Z"></path>
+            </svg>
+        </div>
+    </section>
+
+    <!-- 青春纪念册 -->
+    <section id="photos" class="py-24 bg-dark relative">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(2rem,5vw,3rem)] font-serif text-center mb-16">
+                <span class="text-primary">青春</span>纪念册
+            </h2>
+            
+            <!-- 照片墙 -->
+            <div class="relative" id="photo-tree-container">
+                <!-- 树干 -->
+                <div class="absolute left-1/2 transform -translate-x-1/2 top-0 bottom-0 w-2 bg-primary/70 rounded-full"></div>
+                
+                <!-- 树叶照片 -->
+                <div id="photo-wall" class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6 relative">
+                    <!-- 照片将通过JavaScript动态添加 -->
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 班级风采 -->
+    <section id="class-info" class="py-24 bg-dark relative">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(2rem,5vw,3rem)] font-serif text-center mb-16">
+                <span class="text-primary">班级</span>风采
+            </h2>
+            
+            <!-- 班级介绍 -->
+            <div class="glass-effect rounded-lg p-8 mb-16">
+                <div class="flex flex-col md:flex-row gap-8">
+                    <div class="md:w-1/3">
+                        <div class="relative w-full h-64 rounded-lg overflow-hidden">
+                            <img src="https://picsum.photos/id/237/600/400" alt="班级合照" class="w-full h-full object-cover">
+                            <div class="absolute inset-0 bg-gradient-to-t from-dark/70 to-transparent flex items-end">
+                                <div class="p-4">
+                                    <p class="text-lg font-bold">高三(11)班全家福</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="md:w-2/3">
+                        <h3 class="text-2xl font-bold mb-4 text-primary">班级简介</h3>
+                        <p class="mb-4">
+                            高三(11)班是一个充满活力与团结的集体，由54名怀揣梦想的同学和1位辛勤耕耘的班主任组成。在过去的时光里，我们共同经历了欢笑与泪水，一起为了梦想而拼搏！
+                        </p>
+                        <p>
+                            这里是我们成长的摇篮，是我们梦想启航的地方。在即将到来的高考中，希望你们将以饱满的热情和坚定的信念迎接挑战，为自己的未来而战！
+                        </p>
+                    </div>
+                </div>
+            </div>
+            
+<!-- 班主任信息 -->
+<div class="mb-16">
+    <h3 class="text-2xl font-bold mb-8 text-center">班主任</h3>
+    <div class="flex justify-center">
+        <div class="glass-effect rounded-lg p-6 max-w-md w-full">
+            <div class="flex flex-col items-center">
+                <div class="w-32 h-32 rounded-full overflow-hidden mb-4 border-4 border-primary">
+                    <img src="assests/images/BJ/CY/zyk.ico" alt="班主任照片" class="w-full h-full object-cover">
+                </div>
+                <h4 class="text-xl font-bold mb-2">钟老师</h4>
+                <p class="text-sm text-gray-300 mb-4">物理教师 | 班主任</p>
+                <p class="text-center mb-4">
+                    "教育是一棵树摇动另一棵树，一朵云推动另一朵云，一个灵魂唤醒另一个灵魂。"</br>
+                    "高考就像一场马拉松，不是百米冲刺，而是长跑，需要坚持不懈到达终点"</br>
+                    "只要学不死，就往死里学"
+                </p>
+                <div class="flex space-x-4">
+                    <a href="#" class="text-primary hover:text-primary/80 transition-colors" onclick="showPhoneNumber(event)">
+                        <i class="fa fa-phone"></i>
+                    </a>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- 浮窗元素 -->
+<div id="phonePopup" class="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-50 hidden">
+    <div class="bg-white rounded-lg p-6 max-w-sm w-full text-black">  <!-- 添加了text-black类 -->
+        <h3 class="text-xl font-bold mb-4">钟老师联系方式</h3>
+        <p class="mb-4">电话号码：15886832052</p>
+        <button onclick="hidePhoneNumber()" class="bg-primary text-white px-4 py-2 rounded hover:bg-primary/80 transition-colors">关闭</button>
+    </div>
+</div>
+
+<script>
+    // 显示电话号码浮窗
+    function showPhoneNumber(event) {
+        event.preventDefault();
+        document.getElementById('phonePopup').classList.remove('hidden');
+    }
+    
+    // 隐藏电话号码浮窗
+    function hidePhoneNumber() {
+        document.getElementById('phonePopup').classList.add('hidden');
+    }
+</script>
+            
+            <!-- 班级干部 -->
+            <div class="mb-16">
+                <h3 class="text-2xl font-bold mb-8 text-center">班级干部</h3>
+                <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+                    <!-- 班级干部卡片 -->
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/xrp.ico" alt="班长" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">谢日排</h4>
+                        <p class="text-sm text-gray-300">班长🕵️‍♀️</p>
+                    </div>
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/zmrtgl.ico" alt="学习委员" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">祖木热提古丽</h4>
+                        <p class="text-sm text-gray-300">学习委员📒（代表）</p>
+                    </div>
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/slydablz.ico" alt="团支书" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">萨拉伊丁</h4>
+                        <p class="text-sm text-gray-300">团支书🍰</p>
+                    </div>
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/xkt.ico" alt="体育委员" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">肖开提</h4>
+                        <p class="text-sm text-gray-300">体育委员⚽️</p>
+                    </div>
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/mnr.ico" alt="文艺委员" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">穆尼热</h4>
+                        <p class="text-sm text-gray-300">文艺委员💃</p>
+                    </div>
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/ryhgl.ico" alt="生活委员" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">热依汗古丽</h4>
+                        <p class="text-sm text-gray-300">生活委员📌</p>
+                    </div>
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/slydtht.ico" alt="心理委员" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">萨拉伊丁</h4>
+                        <p class="text-sm text-gray-300">心理委员💗</p>
+                    </div>
+                    <div class="glass-effect rounded-lg p-4 text-center transform hover:scale-105 transition-all duration-300">
+                        <div class="w-20 h-20 mx-auto rounded-full overflow-hidden mb-2">
+                            <img src="assests/images/BJ/CY/akrm.ico" alt="生活委员" class="w-full h-full object-cover">
+                        </div>
+                        <h4 class="font-bold">艾科热木</h4>
+                        <p class="text-sm text-gray-300">秩序管理（跑操秩序🙂）</p>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- 班级成员 -->
+            <div>
+                <h3 class="text-2xl font-bold mb-8 text-center">班级成员</h3>
+                <div class="grid grid-cols-4 sm:grid-cols-6 md:grid-cols-8 lg:grid-cols-10 gap-2">
+                    <!-- 班级成员格子 -->
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="1">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/slydtht.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">萨拉伊丁·托合提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/abdslm.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿卜杜萨拉木</p>
+                        </div>
+                    </div>
+                                        <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="54">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/akrm.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">艾科热木</p>
+                            </div>
+                            </div>
+
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/ylzt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">伊力扎提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/azrtal.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">艾孜热提艾力</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/mwlnyz.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">买吾兰·尼亚孜</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/abdlsmt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">艾拜杜拉·赛买提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/alkm.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">艾力凯木</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/rstm.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">如斯坦木</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/abdlym.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">艾拜杜拉·依明</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/ylhm.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">伊力哈木</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/mwlahmt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">买吾兰·艾合买提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/xkt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">肖开提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/bll.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">比拉力</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/abdkrm.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿卜杜克热木</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/zy.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">赵煜</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/yht.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">郁海涛</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/xr.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">夏蓉</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/dlxt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">迪力夏提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/abdl.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿卜杜拉</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/khe.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">喀哈尔</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/abdan.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿卜杜艾尼</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/nemmt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">努尔麦麦提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/dzj.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">丁志坚</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/ryhgl.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">热议汗古丽</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/aezglted.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿尔祖古丽·吐尔地</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/glzb.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">古丽则巴</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/yryt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">约热耶提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/gljnt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">古丽杰乃提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/klbne.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">凯丽比努尔</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/mehb.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">麦尔哈巴</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/sbne.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">苏比努尔</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/xyd.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">谢伊代</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/aezglhll.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿尔祖古丽·黑力力</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/zlhme.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">祖丽胡玛尔</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/zmrtgl.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">祖母热提古丽</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/gzlne.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">古再丽努尔</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/dlr.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">迪拉热</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/xrp.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">谢日排</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/zy.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">曾云</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/aly.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿丽耶</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/rys.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">热依赛</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/rfn.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">茹菲娜</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/mnr.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">穆尼热</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/ayzb.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">阿依则巴</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/hxy.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">侯欣雨</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/pzly.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">排则丽耶</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/nzktaht.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">娜扎凯缇·艾合体</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/nzktablt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">娜扎凯缇·阿不来提</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/glmr.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">古丽米热</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/kdry.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">凯迪热耶</p>
+                        </div>
+                    </div>
+                    <div class="glass-effect rounded-lg aspect-square flex items-center justify-center cursor-pointer hover:bg-white/10 transition-colors" data-member-id="2">
+                        <div class="text-center">
+                            <div class="w-12 h-12 mx-auto rounded-full overflow-hidden mb-1">
+                                <img src="assests/images/BJ/CY/hsyt.ico" alt="同学照片" class="w-full h-full object-cover">
+                            </div>
+                            <p class="text-xs">哈斯耶提</p>
+                        </div>
+                    </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+            
+            <!-- 考试记录 -->
+            <div>
+                <h3 class="text-2xl font-bold mb-8 text-center">美好瞬间</h3>
+                <div class="glass-effect rounded-lg overflow-hidden">
+                    <table class="w-full">
+                        <thead>
+                            <tr class="bg-primary/20">
+                                <th class="py-4 px-6 text-left">事件</th>
+                                <th class="py-4 px-6 text-left">时间</th>
+                                <th class="py-4 px-6 text-left">描述</th>
+                                <th class="py-4 px-6 text-left">参与人数</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                                <td class="py-4 px-6">第一次分班</td>
+                                <td class="py-4 px-6">2023年3月底</td>
+                                <td class="py-4 px-6">被分到11班，与你们相遇</td>
+                                <td class="py-4 px-6">未知</td>
+                            </tr>
+                            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                                <td class="py-4 px-6">与你们共度美好瞬间</td>
+                                <td class="py-4 px-6">23年——25年</td>
+                                <td class="py-4 px-6">班里，宿舍里的哄堂大笑</td>
+                                <td class="py-4 px-6">56人</td>
+                            </tr>
+                            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                                <td class="py-4 px-6">有过雪仗的快乐</td>
+                                <td class="py-4 px-6">2024年冬天</td>
+                                <td class="py-4 px-6">在田径场的美好时光</td>
+                                <td class="py-4 px-6">56人</td>
+                            </tr>
+                            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                                <td class="py-4 px-6">在运动会的高光时刻（1）</td>
+                                <td class="py-4 px-6">2023年9月</td>
+                                <td class="py-4 px-6">共创辉煌</td>
+                                <td class="py-4 px-6">54人</td>
+                            </tr>
+                            <tr class="border-b border-white/10 hover:bg-white/5 transition-colors">
+                                <td class="py-4 px-6">在运动会的高光时刻（2）</td>
+                                <td class="py-4 px-6">2024年9月</td>
+                                <td class="py-4 px-6">共创辉煌</td>
+                                <td class="py-4 px-6">54人</td>
+                            </tr>
+                            <tr class="hover:bg-white/5 transition-colors">
+                                <td class="py-4 px-6">25年的高考</td>
+                                <td class="py-4 px-6">2025年6月7、8日</td>
+                                <td class="py-4 px-6">愿你们马到成功</td>
+                                <td class="py-4 px-6">54人</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- 金榜题名 -->
+    <section id="motivation" class="py-24 bg-dark relative">
+        <div class="container mx-auto px-4">
+            <h2 class="text-[clamp(2rem,5vw,3rem)] font-serif text-center mb-16">
+                <span class="text-primary">金榜</span>题名
+            </h2>
+            
+            <!-- 励志语录墙 -->
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-16">
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "心之所向，素履以往，生如逆旅，一苇以航。"
+                    </p>
+                </div>
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "只有流过血的手指，才能弹出世间的绝唱。"
+                    </p>
+                </div>
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "十年寒窗无人问，一举成名天下知。"
+                    </p>
+                </div>
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "人生能有几回搏，此时不搏何时搏。"
+                    </p>
+                </div>
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "每一个不曾起舞的日子，都是对生命的辜负。"
+                    </p>
+                </div>
+                <div class="glass-effect p-6 rounded-lg transform hover:scale-105 transition-all duration-300">
+                    <p class="text-lg italic text-center">
+                        "你背不下来的书，总有人能背下来，你做不出来的题，总有人今天努力做完。那么不好意思，你想去的学校也只能别人去了，你想过的人生也只能别人过了。"
+                    </p>
+                </div>
+            </div>
+            
+            <!-- 结束语 -->
+            <div class="text-center mt-20">
+                <p class="text-2xl md:text-3xl font-cursive text-primary mb-4">
+                    我在东经83.73度，北纬41.26度‌‌为所有今年参加高考的高三（11）班的全体学生加油鼓励，愿你们超强发挥，高考加油！
+                </p>
+                <p class="text-2xl md:text-3xl font-serif text-primary mb-8">
+                    希望你们金榜题名，成功上岸！
+                </p>
+                <p class="text-xl md:text-2xl font-serif italic">
+                    --致高三（11）班[加油]
+                </p>
+            </div>
+        </div>
+    </section>
+
+    <!-- 页脚 -->
+    <footer class="py-8 bg-dark/90 text-center">
+        <div class="container mx-auto px-4">
+            <p class="text-gray-400 mb-4">高三(11)班 马到成功、高考加油！</p>
+            <p class="text-gray-500 text-sm">
+                愿你们的未来充满无限可能，高考加油！</br>
+                站点站长特别声明：因一些技术原因，对没有头像信息的同学采取随机机制，在网站随机爬取图片进行使用到头像照片使用。对所有同学照片墙下方添加名，不加姓，请大家别见怪！</br>
+            </p>
+        </div>
+    </footer>
+
+    <script src="photoStorage.js"></script>
+
+    <!-- JavaScript -->
+    <script>
+        // 导航栏滚动效果
+        window.addEventListener('scroll', function() {
+            const navbar = document.getElementById('navbar');
+            if (window.scrollY > 50) {
+                navbar.classList.add('bg-dark/90');
+                navbar.classList.remove('bg-transparent');
+            } else {
+                navbar.classList.remove('bg-dark/90');
+                navbar.classList.add('bg-transparent');
+            }
+        });
+        
+        // 移动端菜单切换
+        document.getElementById('menu-toggle').addEventListener('click', function() {
+            const mobileMenu = document.getElementById('mobile-menu');
+            mobileMenu.classList.toggle('hidden');
+        });
+        
+        // 平滑滚动
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function (e) {
+                e.preventDefault();
+                
+                const targetId = this.getAttribute('href');
+                const targetElement = document.querySelector(targetId);
+                
+                if (targetElement) {
+                    window.scrollTo({
+                        top: targetElement.offsetTop - 80,
+                        behavior: 'smooth'
+                    });
+                    
+                    // 关闭移动端菜单
+                    document.getElementById('mobile-menu').classList.add('hidden');
+                }
+            });
+        });
+        
+        // 倒计时功能
+        function updateCountdown() {
+            const targetDate = new Date('2025-06-07T10:00:00');
+            const now = new Date();
+            const diff = targetDate - now;
+            
+            if (diff <= 0) {
+                document.getElementById('days').textContent = '00';
+                document.getElementById('hours').textContent = '00';
+                document.getElementById('minutes').textContent = '00';
+                document.getElementById('seconds').textContent = '00';
+                return;
+            }
+            
+            const days = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+            
+            document.getElementById('days').textContent = days.toString().padStart(2, '0');
+            document.getElementById('hours').textContent = hours.toString().padStart(2, '0');
+            document.getElementById('minutes').textContent = minutes.toString().padStart(2, '0');
+            document.getElementById('seconds').textContent = seconds.toString().padStart(2, '0');
+        }
+        
+        // 初始化倒计时
+        updateCountdown();
+        setInterval(updateCountdown, 1000);
+        
+        // 照片上传功能
+        const addPhotoBtn = document.getElementById('add-photo-btn');
+        const photoModal = document.getElementById('photo-modal');
+        const cancelUploadBtn = document.getElementById('cancel-upload');
+        const photoUploadForm = document.getElementById('photo-upload-form');
+        
+        addPhotoBtn.addEventListener('click', function() {
+            photoModal.classList.remove('hidden');
+        });
+        
+        cancelUploadBtn.addEventListener('click', function() {
+            photoModal.classList.add('hidden');
+        });
+        
+        photoUploadForm.addEventListener('submit', function(e) {
+            e.preventDefault();
+            
+            const photoInput = document.getElementById('photo-upload');
+            const captionInput = document.getElementById('photo-caption');
+            
+            if (photoInput.files.length === 0) {
+                alert('请选择一张照片');
+                return;
+            }
+            
+            const file = photoInput.files[0];
+            const caption = captionInput.value || '青春记忆';
+            
+            // 显示加载状态
+            const submitButton = this.querySelector('button[type="submit"]');
+            const originalText = submitButton.innerHTML;
+            submitButton.innerHTML = '<i class="fa fa-spinner fa-spin mr-2"></i> 上传中...';
+            submitButton.disabled = true;
+            
+            // 创建文件读取器
+            const reader = new FileReader();
+            
+            // 读取文件完成后的回调
+            reader.onload = function(event) {
+                // 获取图片的DataURL
+                const imageUrl = event.target.result;
+                
+                // 添加照片到照片墙
+                addPhotoToWall(imageUrl, caption);
+                
+                // 重置表单并关闭模态框
+                photoUploadForm.reset();
+                photoModal.classList.add('hidden');
+                
+                // 显示成功提示
+                alert('照片上传成功');
+                
+                // 恢复按钮状态
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            };
+            
+            // 读取文件失败的回调
+            reader.onerror = function() {
+                alert('照片读取失败');
+                
+                // 恢复按钮状态
+                submitButton.innerHTML = originalText;
+                submitButton.disabled = false;
+            };
+            
+            // 开始读取文件
+            reader.readAsDataURL(file);
+        });
+        
+        // 添加照片到照片墙
+        function addPhotoToWall(imageUrl, caption) {
+            const photoWall = document.getElementById('photo-wall');
+            
+            // 创建照片元素
+            const photoElement = document.createElement('div');
+            photoElement.className = 'rounded-lg overflow-hidden group aspect-square';
+            photoElement.innerHTML = `
+                <img src="${imageUrl}" alt="${caption}" class="w-full h-full object-cover transform transition-transform duration-700 group-hover:scale-110">
+                <div class="absolute inset-0 bg-gradient-to-t from-dark/80 via-dark/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 flex items-end">
+                    <div class="p-4">
+                        <p class="text-white font-medium">${caption}</p>
+                    </div>
+                </div>
+            `;
+            
+            // 添加动画效果
+            photoElement.style.animation = 'float 8s ease-in-out infinite';
+            photoElement.style.animationDelay = `${Math.random() * 3}s`;
+            
+            // 添加到照片墙
+            photoWall.appendChild(photoElement);
+        }
+        
+        // 初始化照片墙
+        function initPhotoWall() {
+            const photoWall = document.getElementById('photo-wall');
+            
+            // 示例照片数据 - 保留框架但不加载实际图片
+            const photos = [
+
+            
+            ];
+            
+            // 添加照片到照片墙
+            photos.forEach(photo => {
+                addPhotoToWall(photo.url, photo.caption);
+            });
+        }
+        
+        // 添加树叶飘动动画
+        document.head.insertAdjacentHTML('beforeend', `
+            <style>
+                @keyframes float {
+                    0% { transform: translateY(0px) rotate(0deg); }
+                    25% { transform: translateY(-10px) rotate(5deg); }
+                    50% { transform: translateY(0px) rotate(0deg); }
+                    75% { transform: translateY(10px) rotate(-5deg); }
+                    100% { transform: translateY(0px) rotate(0deg); }
+                }
+            </style>
+        `);
+        
+        // 初始化页面
+        window.addEventListener('DOMContentLoaded', function() {
+            initPhotoWall();
+            
+            // 为班级成员添加点击事件
+            document.querySelectorAll('[data-member-id]').forEach(member => {
+                member.addEventListener('click', function() {
+                    const memberId = this.getAttribute('data-member-id');
+                    // 在实际应用中，这里应该打开成员照片上传模态框
+                    alert(`您正在为同学${memberId}上传照片`);
+                });
+            });
+        });
+    </script>
+</body>
+</html>
