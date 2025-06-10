@@ -129,10 +129,7 @@ Fork项目
 本项目采用 MIT 许可证 - 详情请参阅 LICENSE 文件。
 
 联系方式
-邮箱：contact@example.com
-
-GitHub: @yourusername
-
+邮箱：2171156701@qq.com
 
 
 ## 项目总结
